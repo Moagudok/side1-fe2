@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import axios from "axios";
 import {
   View,
   StyleSheet,
@@ -6,10 +8,26 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { categoryList } from "../database/item";
 import { theme } from "./theme";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Category({ navigation }) {
+  const categoryList = useSelector((state) => state.categoryList);
+  const dispatch = useDispatch();
+
+  const categorySet = () => {
+    return axios.get("http://13.124.175.83:8001/consumer/product/category/");
+  };
+
+  useEffect(() => {
+    categorySet().then((res) => {
+      dispatch({
+        type: "SET_CATEGORY_LIST",
+        list: res.data,
+      });
+    });
+  }, []);
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -46,20 +64,23 @@ export default function Category({ navigation }) {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.categoryList}>
-          {Object.keys(categoryList).map((key) => {
+          {categoryList.map((item, index) => {
             return (
               <TouchableOpacity
-                onPress={() => navigation.navigate("ProductList")}
-                key={key}
+                key={index}
                 style={styles.categoryItem}
+                onPress={() => {
+                  navigation.navigate("ProductList", {
+                    categoryId: item.id,
+                    categoryName: item.name,
+                  });
+                }}
               >
                 <Image
-                  source={{ uri: categoryList[key].image }}
                   style={styles.categoryImage}
+                  source={{ uri: item.image }}
                 />
-                <Text style={styles.categoryText}>
-                  {categoryList[key].name}
-                </Text>
+                <Text style={styles.categoryText}>{item.name}</Text>
               </TouchableOpacity>
             );
           })}

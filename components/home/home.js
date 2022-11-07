@@ -5,12 +5,13 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {theme} from "../theme";
 import HomeBottom from "./homeBottomMenu";
 import BestItem from "./bestItem";
 import NewItem from "./newItem";
 import Category from "./category";
 import Banner from "./banner";
-import {theme} from "../theme";
 import * as SplashScreen from "expo-splash-screen";
 
 async function dismissSplashScreen() {
@@ -18,10 +19,13 @@ async function dismissSplashScreen() {
 }
 
 export default function Home({ navigation }) {
+  const login = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     dismissSplashScreen();
   }, []);
-
+      
   const styles = StyleSheet.create({
     homeStyle: {
       backgroundColor: theme.bgColor,

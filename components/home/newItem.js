@@ -30,8 +30,8 @@ export default function NewItem({ navigation }) {
             marginBottom: 10,
           },
           itemImage: {
-            width: theme.deviceWidth / 2,
-            height: theme.deviceWidth / 2,
+            width: theme.deviceWidth * 0.4,
+            height: theme.deviceWidth * 0.4,
             borderRadius: 10,
             marginRight: 10,
           },

@@ -1,8 +1,13 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { bottomMenuList } from "../../database/item";
+import { useSelector } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { bottomLoginFalse , bottomLoginTrue } from "../../database/bottomMenuList";
+
 
 export default function HomeBottom( { navigation } ) {
+  const bottomMenuList = useSelector((state) => state.bottomMenuList);
+
   const styles = StyleSheet.create({
     bottomMenu: {
       position: "absolute",
@@ -28,27 +33,23 @@ export default function HomeBottom( { navigation } ) {
   });
 
   return (
-    <View style={{marginTop : 80 }}>
-    <View style={styles.bottomMenu}>
-      {Object.keys(bottomMenuList).map((key) => {
-        return (
-          <TouchableOpacity
-            onPress={() => navigation.navigate(bottomMenuList[key].menu)}
-            key={key}
-            style={styles.bottomMenuItem}
-          >
-            <FontAwesome5
-              name={bottomMenuList[key].icon}
-              size={24}
-              color="black"
-            />
-            <Text style={styles.bottomMenuText}>
-              {bottomMenuList[key].name}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
+    <View style={{ marginTop: 80 }}>
+      <View style={styles.bottomMenu}>
+        {bottomMenuList.map((item, index) => {
+          return (
+            <TouchableOpacity
+              key={index}
+              style={styles.bottomMenuItem}
+              onPress={() => {
+                navigation.navigate(item.menu);
+              }}
+            >
+              <FontAwesome5 name={item.icon} size={20} />
+              <Text style={styles.bottomMenuText}>{item.name}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }

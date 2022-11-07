@@ -223,7 +223,7 @@ export const categoryList = {
   };
 
 export const bottomMenuList ={
-    menu1: {
+   menu1: {
         name: "카테고리",
         icon: "list",
         menu: "Category",
@@ -232,7 +232,7 @@ export const bottomMenuList ={
         name: "검색",
         icon: "search",
         menu: "Search",
-    },
+    }, 
     menu3: {
         name: "홈",
         icon: "home",
@@ -244,8 +244,8 @@ export const bottomMenuList ={
         menu: "Chat",
     },
     menu5: {
-        name: "마이페이지",
-        icon: "user-alt",
-        menu: "Mypage",
+        name: "로그인",
+        icon: "sign-in-alt",
+        menu: "LoginPage",
     },
-  }
+}

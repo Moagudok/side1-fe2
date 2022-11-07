@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "react-native";
 import { theme, themeIcon } from "./theme";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Search({ navigation }) {
   const dispatch = useDispatch();
