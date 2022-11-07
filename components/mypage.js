@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity 
 import { useState } from "react";
 import { theme } from "./theme";
 
-export default function Mypage() {
+export default function Mypage({ navigation }) {
   const [searchText, setSearchText] = useState("");
   const orderList = [
     {

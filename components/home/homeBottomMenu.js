@@ -1,9 +1,6 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { useCallback, useEffect } from "react";
-import { bottomLoginFalse , bottomLoginTrue } from "../../database/bottomMenuList";
-
 
 export default function HomeBottom( { navigation } ) {
   const bottomMenuList = useSelector((state) => state.bottomMenuList);

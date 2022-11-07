@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { theme } from "./theme";
+import { useSelector } from "react-redux";
 
 export default function ItemDetail({ route, navigation }) {
   const { name, price, image } = route.params.item;
@@ -16,6 +17,7 @@ export default function ItemDetail({ route, navigation }) {
   //임시 이미지
   const descImage =
     "https://thumbnail6.coupangcdn.com/thumbnails/remote/q89/image/retail/images/2020/12/07/18/6/94368389-0fa9-4d45-861f-56e2e032ff74.jpg";
+  const login = useSelector((state) => state.login);
 
   useEffect(() => {
     Image.getSize(descImage, (width, height) => {
@@ -89,7 +91,13 @@ export default function ItemDetail({ route, navigation }) {
       <TouchableHighlight
         underlayColor={"#000000"}
         style={styles.bottomMenu}
-        onPress={() => {navigation.navigate('Payments', {item: route.params.item})}}
+        onPress={() => {
+          if(login){
+            navigation.navigate('Payments', {item: route.params.item})
+          } else {
+            navigation.navigate('LoginPage')
+          }
+        }}
       >
         <View>
           <Text style={styles.bottomMenuText}>구독하기</Text>

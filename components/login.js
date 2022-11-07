@@ -108,6 +108,8 @@ export default function LoginPage({navigation}) {
         />
         <TextInput
           placeholder="비밀번호"
+          onSubmitEditing={loginButton}
+          returnKeyType="send"
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
