@@ -1,3 +1,12 @@
 # side1-fe2
 
-React Native 6.03
+## 사용 기술
+
+- React
+- Redux
+- Redux-saga
+- React-router
+- Styled-components
+- Axios
+- Webpack
+- Babel
