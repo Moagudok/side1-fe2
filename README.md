@@ -3,10 +3,9 @@
 ## 사용 기술
 
 - React
+- ReactNative
+- ReactNative Navigation
+- ReactNative Vector Icons
+- React Redux
 - Redux
-- Redux-saga
-- React-router
-- Styled-components
-- Axios
-- Webpack
-- Babel
+- Javascript ES6
