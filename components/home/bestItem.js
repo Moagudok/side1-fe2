@@ -26,14 +26,14 @@ export default function BestItem({ navigation }) {
       fontSize: 15,
       fontWeight: "bold",
       marginBottom: 5,
+      marginTop: 10,
     },
     itemPrice: {
       fontSize: 12,
       color: "#999",
     },
     itemTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
+      fontSize: 16,
       marginBottom: 10,
     },
   });

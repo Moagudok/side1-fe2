@@ -48,9 +48,9 @@ export default function Category({ navigation }) {
       alignItems: "center",
     },
     categoryImage: {
-      width: theme.deviceWidth / 4,
-      height: theme.deviceWidth / 4,
-      borderRadius: theme.deviceWidth / 8,
+      width: theme.deviceWidth / 6,
+      height: theme.deviceWidth / 6,
+      borderRadius: theme.deviceWidth / 12,
       borderColor: "#fff",
       borderWidth: 3,
     },

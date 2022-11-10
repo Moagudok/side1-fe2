@@ -30,7 +30,7 @@ export default function ItemDetail({ route, navigation }) {
     <View style={styles.container}>
       <ScrollView
         style={{
-          width: "100%",
+          width: theme.deviceWidth,
         }}
       >
         <View
@@ -40,10 +40,13 @@ export default function ItemDetail({ route, navigation }) {
             alignItems: "center",
           }}
         >
+          <View style={styles.detailImageBox}>
           <Image style={styles.detailImage} source={{ uri: image }} />
+          <Text>그룹명</Text>
           <Text style={styles.itemTitle}>{name}</Text>
           <Text style={styles.itemSubTitle}>월 구독료</Text>
           <Text style={styles.itemPrice}>{price}원</Text>
+          </View>
           <View style={styles.seller}>
             <Text style={styles.sellerText}>딸기농장</Text>
             <TouchableOpacity>
@@ -113,25 +116,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
   },
+  detailImageBox: {
+    width: theme.deviceWidth,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   detailImage: {
     width: theme.deviceWidth,
-    height: 300,
-    borderBottomRightRadius: 50,
-    borderBottomLeftRadius: 50,
+    height: theme.deviceWidth,
+    marginBottom: 20,
   },
   itemTitle: {
     fontSize: 40,
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: 10,
     letterSpacing: 2,
+    color: "#000"
   },
   itemPrice: {
     fontSize: 16,
     fontWeight: "bold",
     marginTop: 10,
-    // 자간
     letterSpacing: 2,
     color: "#f4511e",
+  },
+  itemSubTitle: {
+    fontSize: 14,
+    marginTop: 10,
+    letterSpacing: 2,
+    color: "#000",
   },
   itemDescTitle: {
     fontSize: 15,
@@ -139,7 +152,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   line: {
-    width: "70%",
+    width: theme.deviceWidth - 80,
     height: 1,
     backgroundColor: "#ededed",
     marginTop: 20,
@@ -159,12 +172,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     letterSpacing: 2,
-  },
-  itemSubTitle: {
-    fontSize: 14,
-    marginTop: 10,
-    letterSpacing: 2,
-    color: "#000",
   },
   itemDescImgae: {
     width: theme.deviceWidth,

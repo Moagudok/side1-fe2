@@ -222,30 +222,31 @@ export const categoryList = {
     },
   };
 
-export const bottomMenuList ={
-   menu1: {
-        name: "카테고리",
-        icon: "list",
-        menu: "Category",
+export const recommandList = {
+    recommand1: {
+      name: "밥도둑 간장게장",
+      image: {
+        uri: "https://as1.ftcdn.net/v2/jpg/05/31/62/28/1000_F_531622816_51MayGxPt29yBnzmIBSfCxVrA2yfwINN.jpg",
+      }
     },
-    menu2: {
-        name: "검색",
-        icon: "search",
-        menu: "Search",
-    }, 
-    menu3: {
-        name: "홈",
-        icon: "home",
-        menu: "Home",
+    recommand2: {
+      name: "신선한 두부",
+      image: {
+        uri: "https://img.freepik.com/free-photo/tofu-made-from-soybeans-food-nutrition-concept_1150-26355.jpg?w=1380&t=st=1667963208~exp=1667963808~hmac=edfecdfd8ecae361bb0fce70b7271db7b2c073c4b77444829f93191a5c6634c0",
+      }
     },
-    menu4: {
-        name: "채팅",
-        icon: "comment-dots",
-        menu: "Chat",
+    recommand3: {
+      name: "아삭아삭 잘 익은 김치",
+      image: {
+        uri: "https://img.freepik.com/free-photo/kimchi-ready-to-eat-in-black-plate_1150-35692.jpg?w=1380&t=st=1667963432~exp=1667964032~hmac=6011fd41646e28784e23eb83c591622ebef31c73a13df188bbbcce44bcf549e4",
+      }
     },
-    menu5: {
-        name: "로그인",
-        icon: "sign-in-alt",
-        menu: "LoginPage",
+    recommand4: {
+      name: "최신 IT 뉴스 메일링",
+      image: {
+        uri: "https://img.freepik.com/free-photo/flat-lay-of-business-concept_53876-64851.jpg?w=1380&t=st=1667963588~exp=1667964188~hmac=d5244d717fc20a373f5107ffaa730e7961600dfabf548a4828c747def7ec7a79",
+      }
     },
-}
+};
+
+

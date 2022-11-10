@@ -12,6 +12,7 @@ import BestItem from "./bestItem";
 import NewItem from "./newItem";
 import Category from "./category";
 import Banner from "./banner";
+import {Recommand} from "./recommand";
 import * as SplashScreen from "expo-splash-screen";
 
 async function dismissSplashScreen() {
@@ -45,6 +46,8 @@ export default function Home({ navigation }) {
         <Category navigation={navigation} />
 
         <BestItem navigation={navigation} />
+
+        <Recommand />
 
         <NewItem navigation={navigation} />
       </ScrollView>

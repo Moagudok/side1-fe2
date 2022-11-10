@@ -1,4 +1,7 @@
 import { bottomLoginFalse ,bottomLoginTrue  } from "./bottomMenuList";
+import { useEffect } from "react";
+
+
 
 export function reducer (state, action) {
   switch (action.type) {
@@ -28,6 +31,22 @@ export function reducer (state, action) {
         login: action.login,
         bottomMenuList: action.login ? bottomLoginTrue : bottomLoginFalse,
       };
+    case "LOGOUT":
+      return {
+        ...state,
+        login: false,
+        bottomMenuList: bottomLoginFalse,
+      };
+    case "ADD_CHAT_MESSAGE":
+      return {
+        ...state,
+        chatMessages: [...state.chatMessages, action.message],
+      };
+    case "SOCKET":
+      return {
+        ...state,
+        socket: action.socket,
+      };
     default:
     return {
         ...state,
@@ -35,6 +54,8 @@ export function reducer (state, action) {
         categoryList: [],
         searchText: "",
         login: false,
+        chatMessages: [],
+        socket: null,
         bottomMenuList: bottomLoginFalse,
     };
   }

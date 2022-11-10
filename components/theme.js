@@ -10,7 +10,8 @@ export const theme = {
 
 export const themeIcon = {
     searchIcon: <FontAwesome5 name="search" size={12} color="#333" />,
-    lightIcon: <FontAwesome5 name="lightbulb" size={12} color="#333" />
+    lightIcon: <FontAwesome5 name="lightbulb" size={12} color="#333" />,
+    adIcon : <FontAwesome5 name="ad" size={16} color="black" />
 }
 
 export const stackStyle = {

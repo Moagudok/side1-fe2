@@ -10,8 +10,7 @@ export default function NewItem({ navigation }) {
             marginTop: 20,
           },
           newItemTitle: {
-            fontSize: 18,
-            fontWeight: "bold",
+            fontSize: 16,
             marginBottom: 10,
           },
           itemName: {
@@ -19,6 +18,7 @@ export default function NewItem({ navigation }) {
             fontSize: 15,
             fontWeight: "bold",
             marginBottom: 5,
+            marginTop: 10,
           },
           itemPrice: {
             fontSize: 12,

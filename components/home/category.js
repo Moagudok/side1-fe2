@@ -19,9 +19,9 @@ export default function Category({navigation}) {
       marginRight: 20,
     },
     categoryImage: {
-      width: theme.deviceWidth / 5,
-      height: theme.deviceWidth / 5,
-      borderRadius: theme.deviceWidth / 10,
+      width: theme.deviceWidth / 6,
+      height: theme.deviceWidth / 6,
+      borderRadius: theme.deviceWidth / 12,
       borderColor: "#fff",
       borderWidth: 3,
     },

@@ -15,11 +15,12 @@
     "expo": "~46.0.16",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
-    "expo-updates": "~0.14.6",
+    "expo-updates": "~0.14.7",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-redux": "^8.0.5",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

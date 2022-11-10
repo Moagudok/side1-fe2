@@ -1,9 +1,18 @@
 import { View, Text, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { theme } from "./theme";
+import { useSelector } from "react-redux";
 
 export default function Mypage({ navigation }) {
   const [searchText, setSearchText] = useState("");
+  const login = useSelector((state) => state.login);
+
+  useEffect(() => {
+    if (!login) {
+      navigation.navigate("Home");
+    }
+  }, [login]);
+
   const orderList = [
     {
         name: "프리미엄 오일 레몬 허브 100ml",

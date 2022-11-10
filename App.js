@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import { reducer } from "./database/store";
 import { createStore } from "redux";
 import { stackStyle } from "./components/theme";
+import { View,Text, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 import Home from "./components/home/home";
 import ItemDetail from "./components/itemDetail";
 import Mypage from "./components/mypage";
@@ -14,13 +16,28 @@ import Chat from "./components/chat";
 import ProductList from "./components/productList";
 import Payments from "./components/payment";
 
-export default function App( navigation) {
+function Logout({ navigation }) {
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+  };
+  return (
+    <TouchableOpacity
+    onPress={logout}
+    >
+      <Text>로그아웃</Text>
+    </TouchableOpacity>
+  );
+}
+
+export default function App({navigation}) {
   const Stack = createNativeStackNavigator();
   const store = createStore(reducer);
     
   const headerOption = (title) => {
     return {
       title: title,
+      headerBackTitleVisible: false,
       headerBackButtonMenuEnabled: true,
       headerStyle: {
         backgroundColor: stackStyle.bg,
@@ -45,12 +62,14 @@ export default function App( navigation) {
           <Stack.Screen
             name="ItemDetail"
             component={ItemDetail}
-            options={headerOption("상품 상세")}
+            options={{...headerOption("상품 상세"), }}
           />
           <Stack.Screen
             name="Mypage"
             component={Mypage}
-            options={headerOption("마이페이지")}
+            options={{...headerOption("마이페이지"), headerRight: () => 
+              <Logout />
+              }}
           />
           <Stack.Screen
             name="Category"
