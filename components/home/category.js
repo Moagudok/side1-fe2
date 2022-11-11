@@ -1,9 +1,33 @@
-import {View, Text, Image, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import {categoryList} from '../../database/item';
-import {theme} from '../theme';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { useEffect } from "react";
+import axios from "axios";
+import { theme, backendServer } from "../theme";
+import { useSelector, useDispatch } from "react-redux";
 
+export default function Category({ navigation }) {
+  const categoryList = useSelector((state) => state.categoryList);
+  const dispatch = useDispatch();
 
-export default function Category({navigation}) {
+  const categorySet = () => {
+    return axios.get(backendServer.category);
+  };
+
+  useEffect(() => {
+    categorySet().then((res) => {
+      dispatch({
+        type: "SET_CATEGORY_LIST",
+        list: res.data,
+      });
+    });
+  }, []);
+
   const styles = StyleSheet.create({
     categoryList: {
       paddingHorizontal: 20,
@@ -37,20 +61,28 @@ export default function Category({navigation}) {
     <View style={styles.categoryList}>
       <Text style={styles.categoryTitle}>카테고리</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        {Object.keys(categoryList).map((key) => {
+        {categoryList.map((item, index) => {
           return (
-            <TouchableOpacity 
-              onPress={()=>{navigation.navigate('ProductList')}}
-            key={key} style={styles.categoryItem}>
+            <TouchableOpacity
+              key={index}
+              style={styles.categoryItem}
+              onPress={() => {
+                navigation.navigate("ProductList", {
+                  categoryId: item.id,
+                  categoryName: item.name,
+                  url: `list?category=${item.id}&search&page=`,
+                });
+              }}
+            >
               <Image
-                source={{ uri: categoryList[key].image }}
+                source={{ uri: item.image }}
                 style={styles.categoryImage}
               />
-              <Text style={styles.categoryText}>{categoryList[key].name}</Text>
+              <Text style={styles.categoryText}>{item.name}</Text>
             </TouchableOpacity>
           );
         })}
       </ScrollView>
     </View>
   );
-}   
+}

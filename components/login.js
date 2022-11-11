@@ -23,9 +23,7 @@ export default function LoginPage({navigation}) {
   };
 
   useEffect(() => {
-    if (login) {
-      navigation.goBack();      
-    }
+    login ? navigation.goBack() : null;
   }, [login]);
     
   const styles = StyleSheet.create({

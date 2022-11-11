@@ -3,12 +3,13 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
+import { theme } from "./theme";
 
 export default function Search({ navigation }) {
   const [message, setMessage] = useState("");
@@ -30,14 +31,18 @@ export default function Search({ navigation }) {
       socket.emit("Welcome", "Hello");
     }
   }, [socket]);
-    
+
   useEffect(() => {
     if (socket) {
       socket.on("chat message", (message) => {
-        dispatch({ type: "ADD_CHAT_MESSAGE", message: {
-          msg: message,
-          me: false,
-        } });        
+        dispatch({
+          type: "ADD_CHAT_MESSAGE",
+          message: {
+            msg: message,
+            me: false,
+            date: new Date(),
+          },
+        });
       });
     }
   }, [socket]);
@@ -52,42 +57,73 @@ export default function Search({ navigation }) {
     socket.emit("chat message", message);
     setMessage("");
     //msg me true
-    dispatch({ type: "ADD_CHAT_MESSAGE", message: {
-      msg: message,
-      me: true,
-    } });
+    dispatch({
+      type: "ADD_CHAT_MESSAGE",
+      message: {
+        msg: message,
+        me: true,
+        date: new Date(),
+      },
+    });
   };
-    
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <FlatList
         ref={scrollViewRef}
-        style={styles.chatContainer}
-        contentContainerStyle={styles.chatContentContainer}
-      >
-        {chatMessages.map((message, index) => (
-          message.me ? (
-            <View key={index} style={styles.myMessageContainer}>
-              <Text style={styles.myMessageText}>{message.msg}</Text>
+        onContentSizeChange={() =>
+          scrollViewRef.current.scrollToEnd({ animated: true })
+        }
+        scrollToOverflowEnabled={true}
+        data={chatMessages}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              alignItems: item.me ? "flex-end" : "flex-start",
+              padding: 5,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: item.me ? "#DCF8C6" : "#eee",
+                padding: 10,
+                borderRadius: 7,
+                maxWidth: theme.deviceWidth * 0.6,
+              }}
+            >
+              <Text>{item.msg}</Text>
             </View>
-          ) : (
-            <View key={index} style={styles.messageContainer}>
-              <Text style={styles.messageText}>{message.msg}</Text>
-            </View>
-          )
-        ))}
-      </ScrollView>
+            <Text
+              style={{
+                color: "#ccc",
+                fontSize: 10,
+                marginTop: 2,
+              }}
+            >
+              {item.me ? "유저" : "판매자"}
+            </Text>
+            <Text style={{ color: "#ccc", fontSize: 10 }}>
+              {item.date ? item.date.toLocaleTimeString() : ""}
+            </Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={message}
-          onChangeText={
-            (text) => setMessage(text)
-          }
+          onChangeText={(text) => setMessage(text)}
+          placeholder="메세지를 입력하세요"
+          returnKeyLabel="전송"
+          returnKeyType="send"
+          onSubmitEditing={sendMessage}
+          onFocus={() => {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+          }}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <Text style={styles.sendButtonText}>입력</Text>
+        <TouchableOpacity style={styles.sendBtn} onPress={sendMessage}>
+          <Text style={styles.sendButtonText}>전송</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -97,6 +133,8 @@ export default function Search({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
     backgroundColor: "#fff",
   },
   chatContainer: {
@@ -143,7 +181,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  sendButton: {
+  sendBtn: {
     width: 80,
     height: 40,
     backgroundColor: "#000",

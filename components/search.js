@@ -11,9 +11,9 @@ import { useSelector, useDispatch } from "react-redux";
 export default function Search({ navigation }) {
   const dispatch = useDispatch();
   const searchText = useSelector((state) => state.searchText);
-  
+
   const recentlySearchList = useSelector((state) => state.recentlySearchList);
-  
+
   const recentlySearchAdd = (text) => {
     dispatch({
       type: "SET_RECENTLY_SEARCH_LIST",
@@ -21,6 +21,19 @@ export default function Search({ navigation }) {
     });
     dispatch({
       type: "RESET_SEARCH_TEXT",
+    });
+    navigation.navigate("ProductList", {
+      search: "search",
+      searchText: text,
+      url: `list?category&search=${text}&page=`,
+    });
+  };
+
+  const recentlySearchResult = (text) => {
+    navigation.navigate("ProductList", {
+      search: "search",
+      searchText: text,
+      url: `list?category&search=${text}&page=`,
     });
   };
 
@@ -129,6 +142,7 @@ export default function Search({ navigation }) {
               key={index}
               style={styles.recentlySearchNameBox}
               onPress={() => {
+                recentlySearchResult(item);
               }}
             >
               <Text style={styles.recentlySearchName}>{item}</Text>

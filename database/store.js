@@ -1,9 +1,6 @@
-import { bottomLoginFalse ,bottomLoginTrue  } from "./bottomMenuList";
-import { useEffect } from "react";
+import { bottomLoginFalse, bottomLoginTrue } from "./bottomMenuList";
 
-
-
-export function reducer (state, action) {
+export function reducer(state, action) {
   switch (action.type) {
     case "SET_RECENTLY_SEARCH_LIST":
       return {
@@ -11,15 +8,15 @@ export function reducer (state, action) {
         recentlySearchList: action.list,
       };
     case "SET_SEARCH_TEXT":
-        return {
-            ...state,
-            searchText: action.text,
-        };
+      return {
+        ...state,
+        searchText: action.text,
+      };
     case "RESET_SEARCH_TEXT":
-        return {
-            ...state,
-            searchText: "",
-        }
+      return {
+        ...state,
+        searchText: "",
+      };
     case "SET_CATEGORY_LIST":
       return {
         ...state,
@@ -47,8 +44,18 @@ export function reducer (state, action) {
         ...state,
         socket: action.socket,
       };
+    case "SET_PRODUCT_LIST":
+      return {
+        ...state,
+        productLists: [...state.productLists, ...action.list],
+      };
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
     default:
-    return {
+      return {
         ...state,
         recentlySearchList: [],
         categoryList: [],
@@ -57,6 +64,9 @@ export function reducer (state, action) {
         chatMessages: [],
         socket: null,
         bottomMenuList: bottomLoginFalse,
-    };
+        productLists: [],
+        productGetUrl: "",
+        isLoading: false,
+      };
   }
 }

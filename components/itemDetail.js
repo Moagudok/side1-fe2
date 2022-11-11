@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,19 +11,8 @@ import { theme } from "./theme";
 import { useSelector } from "react-redux";
 
 export default function ItemDetail({ route, navigation }) {
-  const { name, price, image } = route.params.item;
-  const [aspectRatio, setAspectRatio] = useState(1);
-  //임시 이미지
-  const descImage =
-    "https://thumbnail6.coupangcdn.com/thumbnails/remote/q89/image/retail/images/2020/12/07/18/6/94368389-0fa9-4d45-861f-56e2e032ff74.jpg";
+  const { id, name, group_name, image, price, description, views } = route.params;
   const login = useSelector((state) => state.login);
-
-  useEffect(() => {
-    Image.getSize(descImage, (width, height) => {
-      const Ratio = height / width;
-      setAspectRatio(Ratio);
-    });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -33,54 +21,33 @@ export default function ItemDetail({ route, navigation }) {
           width: theme.deviceWidth,
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <View style={styles.itemImageBox}>
           <View style={styles.detailImageBox}>
-          <Image style={styles.detailImage} source={{ uri: image }} />
-          <Text>그룹명</Text>
-          <Text style={styles.itemTitle}>{name}</Text>
-          <Text style={styles.itemSubTitle}>월 구독료</Text>
-          <Text style={styles.itemPrice}>{price}원</Text>
+            <Image style={styles.detailImage} source={{ uri: image }} />
+            <Text>{group_name}</Text>
+            <Text style={styles.itemTitle}>{name}</Text>
+            <Text style={styles.itemSubTitle}>월 구독료</Text>
+            <Text style={styles.itemPrice}>{price}원</Text>
           </View>
           <View style={styles.seller}>
-            <Text style={styles.sellerText}>딸기농장</Text>
+            <Text style={styles.sellerText}>판매자 업체명</Text>
             <TouchableOpacity>
-              <Text style={styles.sellerReviewPoint}>5.0 ★★★★★</Text>
+              <Text style={styles.sellerReviewPoint}>조회수 {views}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.line}></View>
           <Text style={styles.itemDescTitle}>상품설명</Text>
 
           <View style={styles.notedInfomation}>
-            <View style={styles.notedInfoTextBox}>
-              <Text style={styles.notedInfoText}>소비자 상담</Text>
-              <Text style={styles.notedInfoText}>1600-1234</Text>
-            </View>
-            <View style={styles.notedInfoTextBox}>
-              <Text style={styles.notedInfoText}>품명 및 모델명</Text>
-              <Text style={styles.notedInfoText}>논산 딸기</Text>
-            </View>
-            <View style={styles.notedInfoTextBox}>
-              <Text style={styles.notedInfoText}>제조사(수입사)</Text>
-              <Text style={styles.notedInfoText}>논산 농장</Text>
-            </View>
-            <View style={styles.notedInfoTextBox}>
-              <Text style={styles.notedInfoText}>제조사(원산지)</Text>
-              <Text style={styles.notedInfoText}>국내산</Text>
-            </View>
+            <Text style={styles.notedInfomationTitle}>{description}</Text>
           </View>
 
           <Image
             style={{
               ...styles.itemDescImgae,
-              height: theme.deviceWidth * aspectRatio,
+              height: theme.deviceWidth,
             }}
-            source={{ uri: descImage }}
+            source={{ uri: image }}
           />
           <View style={styles.sellerInfo}>
             <Text style={styles.sellerInfoText}>
@@ -95,11 +62,9 @@ export default function ItemDetail({ route, navigation }) {
         underlayColor={"#000000"}
         style={styles.bottomMenu}
         onPress={() => {
-          if(login){
-            navigation.navigate('Payments', {item: route.params.item})
-          } else {
-            navigation.navigate('LoginPage')
-          }
+          login
+            ? navigation.navigate("Payments", { id: id, name: group_name, price: price, image: image })
+            : navigation.navigate("LoginPage");
         }}
       >
         <View>
@@ -116,6 +81,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
   },
+  itemImageBox: {
+    width: theme.deviceWidth,
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
   detailImageBox: {
     width: theme.deviceWidth,
     justifyContent: "center",
@@ -131,7 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 10,
     letterSpacing: 2,
-    color: "#000"
+    color: "#000",
   },
   itemPrice: {
     fontSize: 16,
@@ -147,9 +117,10 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   itemDescTitle: {
-    fontSize: 15,
+    fontSize: 19,
     marginTop: 20,
     letterSpacing: 2,
+    fontWeight: "500",
   },
   line: {
     width: theme.deviceWidth - 80,
@@ -217,10 +188,6 @@ const styles = StyleSheet.create({
     color: "#E14D2A",
   },
   notedInfomation: {
-    width: "60%",
-    height: 100,
-    marginBottom: 10,
-    marginTop: 20,
     padding: 20,
   },
   notedInfoTextBox: {

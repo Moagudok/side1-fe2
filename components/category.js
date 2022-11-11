@@ -9,24 +9,10 @@ import {
   ScrollView,
 } from "react-native";
 import { theme } from "./theme";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Category({ navigation }) {
   const categoryList = useSelector((state) => state.categoryList);
-  const dispatch = useDispatch();
-
-  const categorySet = () => {
-    return axios.get("http://13.124.175.83:8001/consumer/product/category/");
-  };
-
-  useEffect(() => {
-    categorySet().then((res) => {
-      dispatch({
-        type: "SET_CATEGORY_LIST",
-        list: res.data,
-      });
-    });
-  }, []);
 
   const styles = StyleSheet.create({
     container: {
@@ -48,9 +34,9 @@ export default function Category({ navigation }) {
       alignItems: "center",
     },
     categoryImage: {
-      width: theme.deviceWidth / 6,
-      height: theme.deviceWidth / 6,
-      borderRadius: theme.deviceWidth / 12,
+      width: theme.deviceWidth / 3 - 20,
+      height: theme.deviceWidth / 3 - 20,
+      borderRadius: theme.deviceWidth / 6 - 10,
       borderColor: "#fff",
       borderWidth: 3,
     },
@@ -70,10 +56,13 @@ export default function Category({ navigation }) {
                 key={index}
                 style={styles.categoryItem}
                 onPress={() => {
-                  navigation.navigate("ProductList", {
+                  navigation.navigate("ProductList", 
+                  {
                     categoryId: item.id,
                     categoryName: item.name,
-                  });
+                    url: `list?category=${item.id}&search&page=`,
+                  }
+                  );
                 }}
               >
                 <Image

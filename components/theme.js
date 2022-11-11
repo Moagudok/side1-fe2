@@ -1,6 +1,8 @@
 import { Dimensions } from "react-native";
 import {FontAwesome5} from "@expo/vector-icons";
 
+const backSrv = "http://13.124.175.83:8001";
+
 export const theme = {
     bgColor: '#EDEDED',
     primaryColor: 'red',
@@ -17,4 +19,9 @@ export const themeIcon = {
 export const stackStyle = {
   bg: "#EEEEEE",
   color: "#3C4048",
+};
+
+export const backendServer = {
+  category: `${backSrv}/consumer/product/category/`,
+  productList: `${backSrv}/consumer/product/`,
 };

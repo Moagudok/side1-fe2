@@ -5,13 +5,13 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { theme } from "./theme";
 
 export default function Payments({ navigation, route }) {
-  const { name, price, image } = route.params.item;
+
+  const { id, name, group_name, image, price, description, views } = route.params;
 
   const styles = StyleSheet.create({
     container: {
@@ -62,17 +62,16 @@ export default function Payments({ navigation, route }) {
       marginBottom: 10,
     },
     paymentChoiceBox: {
-      borderColor: "#000",
-      borderWidth: 0.4,
       borderRadius: 10,
       padding: 20,
       marginTop: 5,
+      backgroundColor: "yellow",
     },
     paymentSelect: {
       textAlign: "center",
-      fontSize: 15,
-      fontWeight: "500",
-      color: "blue",
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#000",
     },
     paymentComplete: {
       borderRadius: 10,
@@ -89,7 +88,7 @@ export default function Payments({ navigation, route }) {
       <Text style={styles.subDate}>구독 기간 2021.01.01 ~ 2021.12.31</Text>
       <Text style={styles.paymentChoiceTitle}>결제 방법 선택</Text>
       <TouchableOpacity style={styles.paymentChoiceBox}>
-        <Text style={styles.paymentSelect}>삼성카드 ****-**12-34**-****</Text>
+        <Text style={styles.paymentSelect}>카카오 페이 결제</Text>
       </TouchableOpacity>
       <Text style={styles.paymentChoiceTitle}>배송정보 입력</Text>
       <TextInput style={styles.inputBox} placeholder="성함" />
@@ -106,15 +105,14 @@ export default function Payments({ navigation, route }) {
             padding: 15,
             borderRadius: 10,
           }}
-          onPress={() => {
-            alert("결제가 완료되었습니다.");
-          }}
+          onPress={() => navigation.navigate("KaKaoPay")}
         >
           <Text style={{ color: "#fff", textAlign: "center", fontSize: 15 }}>
             결제하기
           </Text>
+    
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
-}
+};

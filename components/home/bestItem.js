@@ -46,7 +46,14 @@ export default function BestItem({ navigation }) {
           return (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ItemDetail", { item: itemList[key] })
+                navigation.navigate("ItemDetail", {
+                  id: itemList[key].id,
+                  name: itemList[key].name,
+                  group_name: itemList[key].name,
+                  description: itemList[key].description,
+                  image: itemList[key].image,
+                  price: itemList[key].price,
+                })
               }
               key={key}
               style={styles.item}

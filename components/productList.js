@@ -1,127 +1,124 @@
 import {
   View,
   Text,
-  ScrollView,
   StyleSheet,
   Image,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
-import { theme } from "./theme";
+import axios from "axios";
+import { theme, backendServer } from "./theme";
+import { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { NowLoading } from "./nowLoading";
 
-const { width } = Dimensions.get("window");
+export default function ProductList({ route, navigation }) {
+  const isLoading = useSelector((state) => state.isLoading);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const url = backendServer.productList + route.params.url + page;
+  const productLists = useSelector((state) => state.productLists);
+  const flatRef = useRef();
+  const dispatch = useDispatch();
 
-export default function ProductList({ navigation }) {
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: theme.bgColor,
-    },
-    productBoxList: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        marginTop: 10,
-      },
-    productImage: {
-      width: width / 2 - 20,
-        height: width / 2 - 20,
-        marginHorizontal: 10,
-        borderRadius: 10,
-        marginBottom: 10,
-    },
-    productName: {
-        fontSize: 12,
-        fontWeight: "500",
-        color: "#333",
-        textAlign: "center",
-        marginBottom: 5,
-    },
-    productPrice: {
-        fontSize: 12,
-        fontWeight: "500",
-        color: "#333",
-        marginTop: 5,
-        marginBottom: 20,
-        textAlign: "center",
-        color: theme.primaryColor,
-        letterSpacing: 2,
-    },
-  });
+  const getDATA = async () => {
+    dispatch({ type: "SET_IS_LOADING", isLoading: true });
+    axios.get(url).then((res) => {
+    setTotalPage(Math.ceil(res.data.count/ 10));
+      dispatch({
+        type: "SET_PRODUCT_LIST",
+        list: [...res.data.results],
+      });
+    dispatch({ type: "SET_IS_LOADING", isLoading: false });
+    });
+  };
+
+  useEffect(() => {
+      getDATA();
+  }, []);
+
+  const addData = () => {
+    if (!isLoading && page <= totalPage) {
+      setPage(page + 1);
+      getDATA();
+      console.log(page +"/"+ totalPage);
+    }
+  };
+
+  const ProductRenderItem = ({ item, navigation }) => {
+    return (
+      <TouchableOpacity style={styles.productItem} onPress={() => {
+        navigation.navigate("ItemDetail", {
+          id: item.id,
+          name: item.product_name,
+          group_name: item.product_group_name,
+          description: item.description,
+          image: item.image,
+          views: item.views,
+          price: item.price,
+        });
+      }}>
+        <Image style={styles.productImage} source={{ uri: item.image }} />
+        <Text style={styles.productName}>{item.product_name}</Text>
+        <Text style={styles.productPrice}>{item.price}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+        
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.productBoxList}>
-        <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://product-image.kurly.com/product/image/a495968f-355a-4a82-9bc7-27f596c0168d.jpg",
-            }}
-            style={styles.productImage}
-          />
-          <Text style={styles.productName}>삼진어묵 김치 우동 어묵 전골</Text>
-          <Text style={styles.productPrice}>월구독 37,210원</Text>
-          </TouchableOpacity>
-            <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/f6216485-6fa1-4980-9b02-8e163c32eff9.jpg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>쿨피스 프리미엄 복숭아맛</Text>
-          <Text style={styles.productPrice}>월구독 51,650원</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1651025209366l0.jpg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>유기농 꿀 고구마 3kg</Text>
-          <Text style={styles.productPrice}>월구독 217,210원</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1603870263444l0.jpg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>4인 가족 간편 김장 패키지</Text>
-          <Text style={styles.productPrice}>월구독 134,110원</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653037400439l0.jpeg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>시그니처 베이글 11종(2개입)</Text>
-          <Text style={styles.productPrice}>월구독 105,800원</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653035852198l0.jpeg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>[풀무원] 새콤달콤유부초밥</Text>
-          <Text style={styles.productPrice}>월구독 135,800원</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653035678890l0.jpeg",
-            }}
-            style={styles.productImage}
-          />
-           <Text style={styles.productName}>[고기반찬] 양념 LA 갈비 800g</Text>
-          <Text style={styles.productPrice}>월구독 1,005,800원</Text>
-          </TouchableOpacity>
-             </View>
-
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        ref={flatRef}
+        data={productLists}
+        renderItem={({ item }) => (
+          <ProductRenderItem item={item} navigation={navigation} />
+        )}
+        keyExtractor={(item,index) => index.toString()}
+        onEndReached={addData}
+        numColumns={2}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => {
+          return isLoading ? <NowLoading /> : null;
+        }}
+      />
+     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.bgColor,
+    flex: 1,
+  },
+  productBoxList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+  },
+  productImage: {
+    width: theme.deviceWidth / 2 - 20,
+    height: theme.deviceWidth / 2 - 20,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  productName: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 5,
+  },
+  productPrice: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#333",
+    marginTop: 5,
+    marginBottom: 20,
+    textAlign: "center",
+    color: theme.primaryColor,
+    letterSpacing: 2,
+  },
+});

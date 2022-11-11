@@ -8,9 +8,7 @@ export default function Mypage({ navigation }) {
   const login = useSelector((state) => state.login);
 
   useEffect(() => {
-    if (!login) {
-      navigation.navigate("Home");
-    }
+    !login ? navigation.navigate("Login") : null;
   }, [login]);
 
   const orderList = [
