@@ -49,6 +49,11 @@ export function reducer(state, action) {
         ...state,
         productLists: [...state.productLists, ...action.list],
       };
+    case "PRODUCT_LIST_RESET":
+      return {
+        ...state,
+        productLists: [],
+      };
     case "SET_IS_LOADING":
       return {
         ...state,

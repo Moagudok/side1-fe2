@@ -36,6 +36,9 @@ export default function ProductList({ route, navigation }) {
 
   useEffect(() => {
       getDATA();
+    return () => {
+      dispatch({ type: "PRODUCT_LIST_RESET" });
+    }
   }, []);
 
   const addData = () => {
