@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  Dimensions,
   TouchableOpacity,
   FlatList,
 } from "react-native";
@@ -14,12 +13,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { NowLoading } from "./nowLoading";
 
 export default function ProductList({ route, navigation }) {
-  const isLoading = useSelector((state) => state.isLoading);
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
+  const isLoading = useSelector((state) => state.isLoading);
   const url = backendServer.productList + route.params.url + page;
   const productLists = useSelector((state) => state.productLists);
-  const flatRef = useRef();
   const dispatch = useDispatch();
 
   const getDATA = async () => {
@@ -74,7 +72,6 @@ export default function ProductList({ route, navigation }) {
   return (
     <View style={styles.container}>
       <FlatList
-        ref={flatRef}
         data={productLists}
         renderItem={({ item }) => (
           <ProductRenderItem item={item} navigation={navigation} />
