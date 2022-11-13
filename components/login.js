@@ -104,7 +104,7 @@ export default function LoginPage({navigation}) {
           onChangeText={(text) => setEmail(text)}
           style={styles.loginInput}
         />
-        <TextInput
+        <TextInput  
           placeholder="비밀번호"
           onSubmitEditing={loginButton}
           returnKeyType="send"

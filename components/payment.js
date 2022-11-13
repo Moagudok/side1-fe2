@@ -13,6 +13,11 @@ export default function Payments({ navigation, route }) {
 
   const { id, name, group_name, image, price, description, views } = route.params;
 
+  const paySelect = {
+    kakaopay : {"name" : "카카오페이", "value" : "kakaopay"},
+    tosspay : {"name" : "토스페이", "value" : "tosspay"},
+  }
+
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.bgColor,
@@ -105,7 +110,7 @@ export default function Payments({ navigation, route }) {
             padding: 15,
             borderRadius: 10,
           }}
-          onPress={() => navigation.navigate("KaKaoPay")}
+          onPress={() => navigation.navigate("KaKaoPay", { paySelect: paySelect })}
         >
           <Text style={{ color: "#fff", textAlign: "center", fontSize: 15 }}>
             결제하기

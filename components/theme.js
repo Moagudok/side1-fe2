@@ -13,7 +13,8 @@ export const theme = {
 export const themeIcon = {
     searchIcon: <FontAwesome5 name="search" size={12} color="#333" />,
     lightIcon: <FontAwesome5 name="lightbulb" size={12} color="#333" />,
-    adIcon : <FontAwesome5 name="ad" size={16} color="black" />
+    adIcon : <FontAwesome5 name="ad" size={16} color="black" />,
+    chatIcon : <FontAwesome5 name="comment-alt" size={16} color="#000" />
 }
 
 export const stackStyle = {
@@ -24,4 +25,6 @@ export const stackStyle = {
 export const backendServer = {
   category: `${backSrv}/consumer/product/category/`,
   productList: `${backSrv}/consumer/product/`,
+  productDetail: `${backSrv}/consumer/product/detail/`,
+  homeApi : `${backSrv}/consumer/home/`,
 };

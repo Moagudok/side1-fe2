@@ -56,7 +56,7 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="Chat"
             component={Chat}
-            options={headerOption("채팅")}
+            options={headerOption("문의하기")}
           />
           <Stack.Screen
             name="ProductList"

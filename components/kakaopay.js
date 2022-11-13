@@ -4,15 +4,18 @@ import IMP from 'iamport-react-native';
 
 /* 로딩 컴포넌트를 불러옵니다. */
 import Loading from './Loading';
-export function KaKaoPay({ navigation }) {
+export function KaKaoPay({ navigation, route }) {
   /* [필수입력] 결제 종료 후, 라우터를 변경하고 결과를 전달합니다. */
   function callback(response) {
     navigation.replace('PaymentResult', response);
   }
 
+  const paySelect = route.params.paySelect;
+
   /* [필수입력] 결제에 필요한 데이터를 입력합니다. */
   const data = {
-    pg: 'kakaopay', // PG사
+    // pg: 'kakaopay', // PG사
+    pg: paySelect.kakaopay.value, // PG사
     pay_method: 'card',
     name: '정기 구독 결제', // 주문명
     merchant_uid: `mid_${new Date().getTime()}`,

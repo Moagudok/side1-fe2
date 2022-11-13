@@ -15,13 +15,24 @@ import Category from "./category";
 import Banner from "./banner";
 import {Recommand} from "./recommand";
 import * as SplashScreen from "expo-splash-screen";
+import axios from "axios";
 
 async function dismissSplashScreen() {
   await SplashScreen.hideAsync();
 }
+ 
+
 export default function Home({ navigation }) {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     dismissSplashScreen();
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://13.124.175.83:8001/consumer/home/").then((res) => {
+      dispatch({ type: "SET_CATEGORY_LIST", list: res.data.categories });
+    });
   }, []);
       
   const styles = StyleSheet.create({

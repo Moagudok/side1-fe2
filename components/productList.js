@@ -23,6 +23,7 @@ export default function ProductList({ route, navigation }) {
   const getDATA = async () => {
     dispatch({ type: "SET_IS_LOADING", isLoading: true });
     axios.get(url).then((res) => {
+      console.log(url);
     setTotalPage(Math.ceil(res.data.count/ 10));
       dispatch({
         type: "SET_PRODUCT_LIST",
@@ -50,15 +51,7 @@ export default function ProductList({ route, navigation }) {
   const ProductRenderItem = ({ item, navigation }) => {
     return (
       <TouchableOpacity style={styles.productItem} onPress={() => {
-        navigation.navigate("ItemDetail", {
-          id: item.id,
-          name: item.product_name,
-          group_name: item.product_group_name,
-          description: item.description,
-          image: item.image,
-          views: item.views,
-          price: item.price,
-        });
+        navigation.navigate("ItemDetail", { id: item.id });
       }}>
         <Image style={styles.productImage} source={{ uri: item.image }} />
         <Text style={styles.productName}>{item.product_name}</Text>

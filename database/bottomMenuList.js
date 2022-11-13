@@ -14,11 +14,11 @@ export const bottomLoginTrue = [
     icon: "home",
     menu: "Home",
   },
-  {
-    name: "채팅",
-    icon: "comment-dots",
-    menu: "Chat",
-  },
+  // {
+  //   name: "채팅",
+  //   icon: "comment-dots",
+  //   menu: "Chat",
+  // },
   {
     name: "마이페이지",
     icon: "user",
@@ -42,11 +42,11 @@ export const bottomLoginFalse = [
       icon: "home",
       menu: "Home",
     },
-    {
-      name: "채팅",
-      icon: "comment-dots",
-      menu: "Chat",
-    },
+    // {
+    //   name: "채팅",
+    //   icon: "comment-dots",
+    //   menu: "Chat",
+    // },
     {
       name: "로그인",
       icon: "sign-in-alt",

@@ -19,15 +19,6 @@ export default function Category({ navigation }) {
     return axios.get(backendServer.category);
   };
 
-  useEffect(() => {
-    categorySet().then((res) => {
-      dispatch({
-        type: "SET_CATEGORY_LIST",
-        list: res.data,
-      });
-    });
-  }, []);
-
   const styles = StyleSheet.create({
     categoryList: {
       paddingHorizontal: 20,

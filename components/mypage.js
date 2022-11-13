@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { theme } from "./theme";
+import { theme, themeIcon } from "./theme";
 import { useSelector } from "react-redux";
 
 export default function Mypage({ navigation }) {
@@ -19,7 +19,8 @@ export default function Mypage({ navigation }) {
         orderStatus: "구독중",
         image: {
             uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1466071146574l0.jpg",
-        }
+        },
+        room: "room1",
             
     },
     {
@@ -28,7 +29,10 @@ export default function Mypage({ navigation }) {
         price: "구독료 2,000원",
         orderStatus: "구독만료",
         image:
-        {uri: "https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/e3d6f36e-f1e4-474c-bea8-38e1abb7113a.jpg",}
+        {uri: "https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/e3d6f36e-f1e4-474c-bea8-38e1abb7113a.jpg",},
+        room: "room2",
+        
+
     },
     {
         name: "프리미엄 손질 생새우살 200g",
@@ -36,7 +40,8 @@ export default function Mypage({ navigation }) {
         price: "구독료 3,000원",
         orderStatus: "구독취소중",
         image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653040890807l0.jpeg",}
+        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653040890807l0.jpeg",},
+        room: "room3",
     },
     {
         name: "한우 불고기 1kg",
@@ -44,7 +49,8 @@ export default function Mypage({ navigation }) {
         price: "구독료 4,000원",
         orderStatus: "취소완료",
         image:
-        {uri:"https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/2bac77f7-2ed8-4a60-b5ec-d1494f591ead.jpg",}
+        {uri:"https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/2bac77f7-2ed8-4a60-b5ec-d1494f591ead.jpg",},
+        room: "room4",
     },
     {
         name: "치즈롤 돈카츠 150g 2개",
@@ -52,7 +58,8 @@ export default function Mypage({ navigation }) {
         price: "구독료 5,000원",
         orderStatus: "구독중",
         image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/165104939315l0.jpg",}
+        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/165104939315l0.jpg",},
+        room: "room5",
     },
     {
         name: "고추장 제육 돈 불고기 600g",
@@ -60,7 +67,8 @@ export default function Mypage({ navigation }) {
         price: "구독료 6,000원",
         orderStatus: "구독중",
         image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653038532582l0.jpeg",}
+        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653038532582l0.jpeg",},
+        room: "room6",
     },
   ]
   return (
@@ -78,40 +86,65 @@ export default function Mypage({ navigation }) {
         <Text style={styles.fillterButtonText}>#구독중</Text>
         <Text style={styles.fillterButtonText}>#종료 7일전</Text>
         <Text style={styles.fillterButtonText}>#구독 만료</Text>
-        <Text style={{...styles.fillterButtonText, backgroundColor: "red", color: "#fff"}}>#구독 취소</Text>
-        <Text style={{...styles.fillterButtonText, backgroundColor: "red", color: "#fff"}}>#취소 진행중</Text>
+        <Text
+          style={{
+            ...styles.fillterButtonText,
+            backgroundColor: "red",
+            color: "#fff",
+          }}
+        >
+          #구독 취소
+        </Text>
+        <Text
+          style={{
+            ...styles.fillterButtonText,
+            backgroundColor: "red",
+            color: "#fff",
+          }}
+        >
+          #취소 진행중
+        </Text>
       </View>
       <ScrollView>
         {orderList.map((order, index) => (
-        <TouchableOpacity key={index} style={styles.orderView}>
+          <TouchableOpacity key={index} style={styles.orderView}>
             <View style={styles.orderBox}>
-                <Image source={order.image} style={styles.orderImage} />
-                <View style={styles.orderInfo}>
-                    <Text 
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.orderTitle}>
-                        {order.name}
-                    </Text>
-                    <Text style={styles.orderDate}>
-                       {order.date}
-                    </Text>
-                    <Text style={styles.orderPrice}>
-                       {order.price}
-                    </Text>
-                    <View style={{...styles.orderStatus,
-                        backgroundColor: order.orderStatus === "구독중" ? "#00BFA6" : order.orderStatus === "구독만료" ? "#FFC107" : "#FF5252"
-                    }}>
-    
-                        <Text style={styles.orderStatusText}>
-                            {order.orderStatus}
-                        </Text>
-                    </View>
+              <TouchableOpacity 
+              onPress={() => navigation.navigate("Chat", {room: order.room, name: order.name, image: order.image})}
+              style={styles.chatButton}>
+                <Text style={styles.chatButtonText}>{themeIcon.chatIcon} 상담</Text>
+              </TouchableOpacity>
+              <Image source={order.image} style={styles.orderImage} />
+              <View style={styles.orderInfo}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.orderTitle}
+                >
+                  {order.name}
+                </Text>
+                <Text style={styles.orderDate}>{order.date}</Text>
+                <Text style={styles.orderPrice}>{order.price}</Text>
+                <View
+                  style={{
+                    ...styles.orderStatus,
+                    backgroundColor:
+                      order.orderStatus === "구독중"
+                        ? "#00BFA6"
+                        : order.orderStatus === "구독만료"
+                        ? "#FFC107"
+                        : "#FF5252",
+                  }}
+                >
+                  <Text style={styles.orderStatusText}>
+                    {order.orderStatus}
+                  </Text>
                 </View>
+              </View>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         ))}
-        </ScrollView> 
+      </ScrollView>
     </View>
   );
 }
@@ -162,6 +195,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // alignItems: "center",
     },
+  chatButton: {
+    position: "absolute",
+    // backgroundColor: "skyblue",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "space-around",
+    borderRadius: 5,
+    marginRight: 10,
+    bottom: 5,
+    right: 0,
+    zIndex: 1,
+  },
+  chatButtonText: {
+    color: "#000",
+    fontSize: 14,
+  },
     orderImage: {
         //box size width
         width: theme.deviceWidth * 0.2,
