@@ -15,9 +15,12 @@ import axios from "axios";
 export default function ItemDetail({ route, navigation }) {
   const login = useSelector((state) => state.login);
   const [item, setItem] = useState({});
+  const id = route.params.id;
+
 
   useEffect(() => {
-    axios.get("http://13.124.175.83:8001/consumer/product/detail/1")
+    console.log(id);
+    axios.get(`http://13.124.175.83:8001/consumer/product/detail/${id}`)
     .then((res) => {
       setItem(res.data)
     })
@@ -73,7 +76,7 @@ export default function ItemDetail({ route, navigation }) {
         style={styles.bottomMenu}
         onPress={() => {
           login
-            ? navigation.navigate("Payments", { id: id, name: item.group_name, price: item.price, image: item.image })
+            ? navigation.navigate("Payments", { id: 1, name: item.group_name, price: item.price, image: item.image })
             : navigation.navigate("LoginPage");
         }}
       >

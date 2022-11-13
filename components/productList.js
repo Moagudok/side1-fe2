@@ -48,10 +48,10 @@ export default function ProductList({ route, navigation }) {
     }
   };
 
-  const ProductRenderItem = ({ item, navigation }) => {
+  const ProductRenderItem = ({ item, index, navigation }) => {
     return (
       <TouchableOpacity style={styles.productItem} onPress={() => {
-        navigation.navigate("ItemDetail", { id: item.id });
+        navigation.navigate("ItemDetail", { id: index + 1});
       }}>
         <Image style={styles.productImage} source={{ uri: item.image }} />
         <Text style={styles.productName}>{item.product_name}</Text>
@@ -66,8 +66,8 @@ export default function ProductList({ route, navigation }) {
     <View style={styles.container}>
       <FlatList
         data={productLists}
-        renderItem={({ item }) => (
-          <ProductRenderItem item={item} navigation={navigation} />
+        renderItem={({ item,index }) => (
+          <ProductRenderItem item={item} index={index} navigation={navigation} />
         )}
         keyExtractor={(item,index) => index.toString()}
         onEndReached={addData}
