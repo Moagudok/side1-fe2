@@ -1,14 +1,15 @@
 import { Dimensions } from "react-native";
 import {FontAwesome5} from "@expo/vector-icons";
 
-const backSrv = "http://13.124.175.83:8001";
+const backSrv = "http://52.79.143.145:8001";
 
 export const theme = {
     bgColor: '#EDEDED',
     primaryColor: 'red',
     deviceWidth: Dimensions.get('window').width,
     mainColor: '#FF6F61',
-};
+    homebanerImage: {uri: "https://static.spartacodingclub.kr/043a96e34c19/static/v5/images/navbar/mobile_navbar_banner.png?t=1634535923",},
+  };
 
 export const themeIcon = {
     searchIcon: <FontAwesome5 name="search" size={12} color="#333" />,
@@ -27,4 +28,8 @@ export const backendServer = {
   productList: `${backSrv}/consumer/product/`,
   productDetail: `${backSrv}/consumer/product/detail/`,
   homeApi : `${backSrv}/consumer/home/`,
+  lastSearch : `${backSrv}/search/latest`,
 };
+
+// http://52.79.143.145:8001/consumer/product/list?category=1&search&page=1
+

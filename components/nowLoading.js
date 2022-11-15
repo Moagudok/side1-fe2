@@ -1,10 +1,22 @@
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
 
 const styles = StyleSheet.create({
   nowLoading: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    backgroundColor: "rgba(255,255,255,0.5)",
+  },
+  loadingText: {
+    fontSize: 20,
+    color: "#000",
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  loadingImage: {
+    width: 100,
+    height: 100,
   },
 });
 

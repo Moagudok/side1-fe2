@@ -8,15 +8,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { theme } from "./theme";
+import { useState } from "react";
+import {PaymentSelectModal} from "./paymentSelect";
+
 
 export default function Payments({ navigation, route }) {
+  const [subscriptionPeriod, setSubscriptionPeriod] = useState({
+    start: new Date().toISOString().slice(0, 10),
+    end: new Date(new Date().setMonth(new Date().getMonth() + 1))
+      .toISOString()
+      .slice(0, 10),
+  });
 
-  const { id, name, group_name, image, price, description, views } = route.params;
+  const { id, name, group_name, image, price, description, views } =
+    route.params;
 
   const paySelect = {
-    kakaopay : {"name" : "카카오페이", "value" : "kakaopay"},
-    tosspay : {"name" : "토스페이", "value" : "tosspay"},
-  }
+    kakaopay: { name: "카카오페이", value: "kakaopay" },
+    tosspay: { name: "토스페이", value: "tosspay" },
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -90,9 +100,14 @@ export default function Payments({ navigation, route }) {
       <Image style={styles.itemImage} source={{ uri: image }} />
       <Text style={styles.itemTitle}>{name}</Text>
       <Text style={styles.itemPrice}>월 구독료 {price}원</Text>
-      <Text style={styles.subDate}>구독 기간 2021.01.01 ~ 2021.12.31</Text>
+      <Text style={styles.subDate}>
+        구독 기간 {subscriptionPeriod.start} ~ {subscriptionPeriod.end}
+      </Text>
       <Text style={styles.paymentChoiceTitle}>결제 방법 선택</Text>
-      <TouchableOpacity style={styles.paymentChoiceBox}>
+      <TouchableOpacity
+        style={styles.paymentChoiceBox}
+        onPress={() => navigation.navigate("PaymentSelect")}
+      >
         <Text style={styles.paymentSelect}>카카오 페이 결제</Text>
       </TouchableOpacity>
       <Text style={styles.paymentChoiceTitle}>배송정보 입력</Text>
@@ -110,12 +125,13 @@ export default function Payments({ navigation, route }) {
             padding: 15,
             borderRadius: 10,
           }}
-          onPress={() => navigation.navigate("KaKaoPay", { paySelect: paySelect })}
+          onPress={() =>
+            navigation.navigate("KaKaoPay", { paySelect: paySelect })
+          }
         >
           <Text style={{ color: "#fff", textAlign: "center", fontSize: 15 }}>
             결제하기
           </Text>
-    
         </TouchableOpacity>
       </View>
     </ScrollView>

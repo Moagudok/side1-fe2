@@ -16,6 +16,7 @@ import KaKaoPay from "./components/kakaopay";
 import {PaymentResult} from "./components/PaymentResult";
 import { Logout } from "./components/logout";
 import { headerOption } from "./headerOptions";
+import {PaymentSelect} from "./components/paymentSelect";
 
 export default function App({ navigation }) {
   const Stack = createNativeStackNavigator();
@@ -83,6 +84,11 @@ export default function App({ navigation }) {
             component={PaymentResult}
             options={headerOption("결제 결과")}
           />
+          <Stack.Screen
+          name="PaymentSelect"
+          component={PaymentSelect}
+          options={headerOption("결제수단 선택")}
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

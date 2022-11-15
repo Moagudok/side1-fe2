@@ -7,43 +7,86 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { theme } from "./theme";
+import axios from "axios";
+import { map } from "jquery";
 
 export default function Chat({ navigation, route }) {
+  const { name, image, room, user } = route.params;
   const [message, setMessage] = useState("");
-  const chatMessages = useSelector((state) => state.chatMessages);
+  // const chatMessages = useSelector((state) => state.chatMessages);
   const socket = useSelector((state) => state.socket);
-  const scrollViewRef = useRef();
+  const [pageLoad, setPageLoad] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [userList, setUserList] = useState();
+  const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
-  const { name, image, room } = route.params;
+  const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
+  const chatdataGet = async () => {
+    const res = await axios.get(
+      `http://52.78.159.41:4005/chatList/?room=${room}`
+    );
+    dispatch({ type: "RESET_CHAT_MESSAGE", list: res.data });
+  };
+
+  const chatJoin = () => {
+    if (socket) {
+      socket.emit("join", room, user);
+    }
+  };
+
+  const chatLeave = () => {
+    if (socket) {
+      socket.emit("leave", room, user);
+      socket.disconnect();
+    }
+  };
+
   useEffect(() => {
-    const socket = io("http://52.78.159.41:4005/chat");
-    socket.emit("join", room);
+    chatdataGet();
+    setPageLoad(true);
+  }, []);
+
+  useEffect(() => {
+    // const socket = io("http://52.78.159.41:4005/chat");
+    const socket = io("http://localhost:4005/chat");
+    socket.emit("join", room, user);
+    socket.on("join users", (users) => {
+      setUserList(users);
+    });
     dispatch({ type: "SOCKET", socket });
     return () => {
-      socket.emit("leave", room);
+      socket.emit("leave", room, user);
+      socket.on("join users", (users) => {
+        setUserList(users);
+      });
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    console.log(room);
     if (socket) {
-      socket.on("chat message", (msg) => {
+      socket.on("join users", (users) => {
+        console.log(users);
+        setUserList(users);
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("chat message", (room, user, message) => {
+        socket.on("join users", (users) => {
+          setUserList(users);
+        });
         dispatch({
           type: "ADD_CHAT_MESSAGE",
-          message: {
-            id : new Date().getTime(),
-            room: room,
-            msg: msg,
-            me: false,
-            date: new Date(),
-          },
+          message: { room, user, message, time: new Date() },
         });
       });
     }
@@ -57,19 +100,12 @@ export default function Chat({ navigation, route }) {
 
   const sendMessage = () => {
     if (message) {
-      socket.emit("chat message", room, message);
+      socket.emit("chat message", room, user, message);
       setMessage("");
       dispatch({
         type: "ADD_CHAT_MESSAGE",
-        message: {
-          id : new Date().getTime(),
-          room: room,
-          msg: message,
-          me: true,
-          date: new Date(),
-        },
+        message: { user, message, room, time: new Date() },
       });
-      console.log(chatMessages);
     }
   };
 
@@ -79,60 +115,103 @@ export default function Chat({ navigation, route }) {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-evenly",
+          justifyContent: "space-between",
           backgroundColor: "#000",
         }}
       >
         <Image style={{ width: 70, height: 70 }} source={image} />
-        <Text style={{ fontSize: 16, fontWeight: "300", color: "white" }}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "300",
+            color: "white",
+            paddingHorizontal: 20,
+          }}
+        >
           {name}
         </Text>
       </View>
+      {userList ? (
+        <View style={{ flexDirection: "row", backgroundColor: "skyblue" }}>
+          {userList.map((item, index) => (
+            <Text key={index} style={{ margin: 10, color: "#000" }}>
+              {item.user}
+            </Text>
+          ))}
+        </View>
+      ) : (
+        <Text style={{ margin: 10, color: "#000" }}>{user}</Text>
+      )}
       <FlatList
         ref={scrollViewRef}
         onContentSizeChange={() =>
           scrollViewRef.current.scrollToEnd({ animated: false })
         }
+        // top scroll page nation
+        // onScroll={(e) => {
+        //   if (e.nativeEvent.contentOffset.y === 0) {
+        //     pageLoad ? console.log("true") : console.log("false");
+
+        //   }
+        // }}
         scrollToOverflowEnabled={true}
         data={chatMessages}
-        renderItem={({ item }) => 
-          item.room === room ? (
+        renderItem={({ item }) =>
+          room === item.room ? (
             <View
               style={{
-                alignItems: item.me ? "flex-end" : "flex-start",
-                marginVertical: 10,
-                width: theme.deviceWidth * 1,
+                alignItems: item.user === user ? "flex-end" : "flex-start",
               }}
             >
               <View
                 style={{
-                  backgroundColor: item.me ? "yellow" : "#eee",
-                  padding: 10,
                   borderRadius: 10,
-                  marginHorizontal: 10,
-                  maxWidth: theme.deviceWidth * 0.6,
+                  margin: 5,
+                  backgroundColor: item.user === user ? "yellow" : "#eee",
                 }}
               >
                 <Text
                   style={{
-                    color: item.me ? "#000" : "#000",
-                    fontSize: 12,
+                    padding: 10,
+                    fontSize: 14,
                     fontWeight: "300",
+                    color: item.user === user ? "#000" : "#000",
                   }}
                 >
-                  {item.msg}
+                  {item.message}
                 </Text>
               </View>
-              <View style={{alignItems: "flex-end",paddingHorizontal: 10}}>
-                {item.me ? <Text style={{ fontSize: 10, color: "#aaa" }}>구매자</Text> : <Text style={{ fontSize: 10, color: "#aaa" }}>판매자</Text>}
-                <Text style={{fontSize: 10, color: "gray" }}>{new Date(item.date).toLocaleTimeString()}</Text>
+              <View
+                style={{
+                  alignItems: item.user === user ? "flex-end" : "flex-start",
+                }}
+              >
+                <Text
+                  style={{
+                    paddingHorizontal: 10,
+                    fontSize: 10,
+                    fontWeight: "300",
+                    color: "#000",
+                  }}
+                >
+                  {item.user}
+                </Text>
+                <Text
+                  style={{
+                    paddingHorizontal: 10,
+                    fontSize: 10,
+                    fontWeight: "300",
+                    color: "#000",
+                  }}
+                >
+                  {new Date(item.time).toLocaleTimeString()}
+                </Text>
               </View>
-
             </View>
           ) : null
         }
-        keyExtractor={(item) => item.id}
-      />          
+        keyExtractor={(item, index) => index}
+      />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}

@@ -6,10 +6,15 @@ import { useSelector } from "react-redux";
 export default function Mypage({ navigation }) {
   const [searchText, setSearchText] = useState("");
   const login = useSelector((state) => state.login);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     !login ? navigation.navigate("Home") : null;
   }, [login]);
+
+  useEffect(() => { 
+    setUser("user" + Math.floor(Math.random() * 1000));
+  }, []);
 
   const orderList = [
     {
@@ -110,7 +115,7 @@ export default function Mypage({ navigation }) {
           <TouchableOpacity key={index} style={styles.orderView}>
             <View style={styles.orderBox}>
               <TouchableOpacity 
-              onPress={() => navigation.navigate("Chat", {room: order.room, name: order.name, image: order.image})}
+              onPress={() => navigation.navigate("Chat", {room: order.room, name: order.name, image: order.image, user})}
               style={styles.chatButton}>
                 <Text style={styles.chatButtonText}>{themeIcon.chatIcon} 상담</Text>
               </TouchableOpacity>

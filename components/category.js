@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import axios from "axios";
 import {
   View,
   StyleSheet,
@@ -56,13 +54,11 @@ export default function Category({ navigation }) {
                 key={index}
                 style={styles.categoryItem}
                 onPress={() => {
-                  navigation.navigate("ProductList", 
-                  {
+                  navigation.navigate("ProductList", {
                     categoryId: item.id,
                     categoryName: item.name,
                     url: `list?category=${item.id}&search&page=`,
-                  }
-                  );
+                  });
                 }}
               >
                 <Image

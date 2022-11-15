@@ -5,23 +5,31 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { theme, themeIcon } from "./theme";
-import { useSelector, useDispatch } from "react-redux";
+import { theme, themeIcon, backendServer } from "./theme";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Search({ navigation }) {
-  const dispatch = useDispatch();
-  const searchText = useSelector((state) => state.searchText);
+  const [recentlySearchList, setRecentlySearchList] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
-  const recentlySearchList = useSelector((state) => state.recentlySearchList);
+  useEffect(() => {
+    axios.get(backendServer.lastSearch).then((res) => {
+      const searchData = JSON.parse(res.data);
+      setRecentlySearchList(searchData);
+    });
+  }, []);
+
+  const recentSearchSave = async () => {
+    const res = await axios.post("http://52.79.143.145:8001/search/latest", {
+      search: searchText,
+    });
+  };
 
   const recentlySearchAdd = (text) => {
-    dispatch({
-      type: "SET_RECENTLY_SEARCH_LIST",
-      list: [...recentlySearchList, text],
-    });
-    dispatch({
-      type: "RESET_SEARCH_TEXT",
-    });
+    setRecentlySearchList([...recentlySearchList, { searchText: text }]);
+    recentSearchSave();
+    setSearchText("");
     navigation.navigate("ProductList", {
       search: "search",
       searchText: text,
@@ -121,10 +129,7 @@ export default function Search({ navigation }) {
         <TextInput
           value={searchText}
           onChangeText={(text) => {
-            dispatch({
-              type: "SET_SEARCH_TEXT",
-              text: text,
-            });
+            setSearchText(text);
           }}
           onSubmitEditing={(e) => recentlySearchAdd(e.nativeEvent.text)}
           placeholder="상품명을 입력해주세요"
@@ -142,10 +147,10 @@ export default function Search({ navigation }) {
               key={index}
               style={styles.recentlySearchNameBox}
               onPress={() => {
-                recentlySearchResult(item);
+                recentlySearchResult(item.searchText);
               }}
             >
-              <Text style={styles.recentlySearchName}>{item}</Text>
+              <Text style={styles.recentlySearchName}>{item.searchText}</Text>
             </TouchableOpacity>
           ))
         ) : (

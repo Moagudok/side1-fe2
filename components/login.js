@@ -12,7 +12,7 @@ export default function LoginPage({navigation}) {
   const dispatch = useDispatch();
 
   const loginButton = () => {
-    if (email === "admin" && password === "admin") {
+    if (email === "1234" && password === "1234") {
       dispatch({ type: "SET_LOGIN", login: true });
     } else {
       Platform.OS === "ios" ? Vibration.vibrate() : Vibration.vibrate(1000);

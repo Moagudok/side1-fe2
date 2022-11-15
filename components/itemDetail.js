@@ -7,27 +7,31 @@ import {
   TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
-import { theme,backendServer } from "./theme";
+import { theme, backendServer } from "./theme";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { NowLoading } from "./nowLoading";
 import axios from "axios";
 
 export default function ItemDetail({ route, navigation }) {
-  const login = useSelector((state) => state.login);
-  const [item, setItem] = useState({});
   const id = route.params.id;
+  const login = useSelector((state) => state.login);
+  const [data, setData] = useState({});
+  const [IsLoading, setIsLoading] = useState(true);
 
+  const getData = async () => {
+    const res = await axios.get(backendServer.productDetail + id);
+    setData(res.data);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    console.log(id);
-    axios.get(`http://13.124.175.83:8001/consumer/product/detail/${id}`)
-    .then((res) => {
-      setItem(res.data)
-    })
+    getData();
   }, []);
 
-
-  return (
+  return IsLoading ? (
+    <NowLoading />
+  ) : (
     <View style={styles.container}>
       <ScrollView
         style={{
@@ -36,32 +40,38 @@ export default function ItemDetail({ route, navigation }) {
       >
         <View style={styles.itemImageBox}>
           <View style={styles.detailImageBox}>
-            <Image style={styles.detailImage} source={{ uri: item.image }} />
-            <Text>{item.group_name}</Text>
-            <Text style={styles.itemTitle}>{item.product_name}</Text>
+            <Image style={styles.detailImage} source={{ uri: data.image }} />
+            <Text>{data.group_name}</Text>
+            <Text style={styles.itemTitle}>{data.product_name}</Text>
             <Text style={styles.itemSubTitle}>월 구독료</Text>
-            <Text style={styles.itemPrice}>{item.price}원</Text>
+            <Text style={styles.itemPrice}>{data.price}원</Text>
           </View>
           <View style={styles.seller}>
-            <Text style={styles.sellerText}>{item.seller}</Text>
+            <Text style={styles.sellerText}>{data.seller}</Text>
             <TouchableOpacity>
-              <Text style={styles.sellerReviewPoint}>조회수 {item.views}</Text>
+              <Text style={styles.sellerReviewPoint}>조회수 {data.views}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.line}></View>
           <Text style={styles.itemDescTitle}>상품설명</Text>
 
           <View style={styles.notedInfomation}>
-            <Text style={styles.notedInfomationTitle}>{item.description}</Text>
+            <Text style={styles.notedInfomationTitle}>{data.description}</Text>
           </View>
-
-          <Image
-            style={{
-              ...styles.itemDescImgae,
-              height: theme.deviceWidth,
-            }}
-            source={{ uri: item.image }}
-          />
+          {data.productimages === undefined ? null : (
+            <View style={styles.notedInfomation}>
+              <Text style={styles.itemDescTitle}>상품 이미지</Text>
+              <View style={styles.notedInfomationImageBox}>
+                {data.productimages.map((item) => (
+                  <Image
+                    key={item.id}
+                    style={styles.detailImage}
+                    source={{ uri: item.image }}
+                  />
+                ))}
+              </View>
+            </View>
+          )}
           <View style={styles.sellerInfo}>
             <Text style={styles.sellerInfoText}>
               등록된 판매 상품과 상품의 내용, 거래 정보 및 가격은 판매자가
@@ -76,7 +86,12 @@ export default function ItemDetail({ route, navigation }) {
         style={styles.bottomMenu}
         onPress={() => {
           login
-            ? navigation.navigate("Payments", { id: 1, name: item.group_name, price: item.price, image: item.image })
+            ? navigation.navigate("Payments", {
+                id: 1,
+                name: data.group_name,
+                price: data.price,
+                image: data.image,
+              })
             : navigation.navigate("LoginPage");
         }}
       >
@@ -130,10 +145,12 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   itemDescTitle: {
+    textAlign: "center",
     fontSize: 19,
     marginTop: 20,
     letterSpacing: 2,
     fontWeight: "500",
+    marginBottom: 20,
   },
   line: {
     width: theme.deviceWidth - 80,

@@ -6,70 +6,72 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import axios from "axios";
-import { theme, backendServer } from "./theme";
 import { useEffect, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { theme, backendServer } from "./theme";
 import { NowLoading } from "./nowLoading";
+import axios from "axios";
 
 export default function ProductList({ route, navigation }) {
-  const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
-  const isLoading = useSelector((state) => state.isLoading);
+  const [isLoading, setIsLoading] = useState(true);
+  const [productLists, setProductLists] = useState([]);
   const url = backendServer.productList + route.params.url + page;
-  const productLists = useSelector((state) => state.productLists);
-  const dispatch = useDispatch();
+  const totalPage = useRef(0);
+  const limit = 10;
 
   const getDATA = async () => {
-    dispatch({ type: "SET_IS_LOADING", isLoading: true });
-    axios.get(url).then((res) => {
-      console.log(url);
-    setTotalPage(Math.ceil(res.data.count/ 10));
-      dispatch({
-        type: "SET_PRODUCT_LIST",
-        list: [...res.data.results],
-      });
-    dispatch({ type: "SET_IS_LOADING", isLoading: false });
-    });
+    setIsLoading(true);
+    const res = await axios.get(url);
+    const data = res.data;
+    totalPage.current = Math.ceil(data.count / limit);
+    setProductLists([...productLists, ...data.results]);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-      getDATA();
-    return () => {
-      dispatch({ type: "PRODUCT_LIST_RESET" });
-    }
+    getDATA();
   }, []);
 
   const addData = () => {
-    if (!isLoading && page <= totalPage) {
+    if (!isLoading && page <= totalPage.current) {
       setPage(page + 1);
       getDATA();
-      console.log(page +"/"+ totalPage);
     }
+    return null;
   };
 
-  const ProductRenderItem = ({ item, index, navigation }) => {
+  const ProductRenderItem = ({ item, navigation }) => {
     return (
-      <TouchableOpacity style={styles.productItem} onPress={() => {
-        navigation.navigate("ItemDetail", { id: index + 1});
-      }}>
-        <Image style={styles.productImage} source={{ uri: item.image }} />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("ItemDetail", { id: item.id });
+        }}
+      >
+        <View style={styles.productImageBox}>
+          <View style={styles.productTerm}>
+            <Text style={styles.productTermText}>{item.payment_term} 1회</Text>
+          </View>
+          <Image style={styles.productImage} source={{ uri: item.image }} />
+        </View>
+        <Text style={styles.productGroupName}>{item.product_group_name}</Text>
         <Text style={styles.productName}>{item.product_name}</Text>
-        <Text style={styles.productPrice}>{item.price}</Text>
+        <Text style={styles.productPrice}>{item.price.toLocaleString()}원</Text>
       </TouchableOpacity>
     );
   };
-
-        
 
   return (
     <View style={styles.container}>
       <FlatList
         data={productLists}
-        renderItem={({ item,index }) => (
-          <ProductRenderItem item={item} index={index} navigation={navigation} />
+        renderItem={({ item, index }) => (
+          <ProductRenderItem
+            item={item}
+            index={index}
+            navigation={navigation}
+          />
         )}
-        keyExtractor={(item,index) => index.toString()}
+        keyExtractor={(item, index) => index.toString()}
         onEndReached={addData}
         numColumns={2}
         onEndReachedThreshold={0.5}
@@ -77,18 +79,31 @@ export default function ProductList({ route, navigation }) {
           return isLoading ? <NowLoading /> : null;
         }}
       />
-     </View>
+    </View>
   );
 }
+
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.bgColor,
     flex: 1,
   },
-  productBoxList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+  productImageBox: {
     marginTop: 10,
+  },
+  productTerm: {
+    position: "absolute",
+    top: -3,
+    right: 5,
+    backgroundColor: theme.mainColor,
+    borderRadius: 5,
+    padding: 5,
+    zIndex: 1,
+  },
+  productTermText: {
+    color: "white",
+    fontSize: 12,
   },
   productImage: {
     width: theme.deviceWidth / 2 - 20,
@@ -101,6 +116,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
     color: "#333",
+    textAlign: "center",
+    marginBottom: 5,
+  },
+  productGroupName: {
+    fontSize: 10,
+    color: "#999",
     textAlign: "center",
     marginBottom: 5,
   },

@@ -6,18 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { useEffect } from "react";
-import axios from "axios";
-import { theme, backendServer } from "../theme";
-import { useSelector, useDispatch } from "react-redux";
+import { theme } from "../theme";
+import { useSelector } from "react-redux";
 
 export default function Category({ navigation }) {
   const categoryList = useSelector((state) => state.categoryList);
-  const dispatch = useDispatch();
-
-  const categorySet = () => {
-    return axios.get(backendServer.category);
-  };
 
   const styles = StyleSheet.create({
     categoryList: {

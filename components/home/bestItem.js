@@ -6,10 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { itemList } from "../../database/item";
 import { theme } from "../theme";
+import { useSelector } from "react-redux";
 
 export default function BestItem({ navigation }) {
+  const bestItemList = useSelector((state) => state.bestItemList);
   const styles = StyleSheet.create({
     itemBox: {
       paddingHorizontal: 20,
@@ -42,31 +43,18 @@ export default function BestItem({ navigation }) {
     <View style={styles.itemBox}>
       <Text style={styles.itemTitle}>인기 상품</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        {Object.keys(itemList).map((key) => {
-          return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ItemDetail", {
-                  id: itemList[key].id,
-                  name: itemList[key].name,
-                  group_name: itemList[key].name,
-                  description: itemList[key].description,
-                  image: itemList[key].image,
-                  price: itemList[key].price,
-                })
-              }
-              key={key}
-              style={styles.item}
-            >
-              <Image
-                source={{ uri: itemList[key].image }}
-                style={styles.itemImage}
-              />
-              <Text style={styles.itemName}>{itemList[key].name}</Text>
-              <Text style={styles.itemPrice}>{itemList[key].price}원</Text>
-            </TouchableOpacity>
-          );
-        })}
+        {bestItemList.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            onPress={() => navigation.navigate("ItemDetail", { id: item.id })}
+          >
+            <View>
+              <Image source={{ uri: item.image }} style={styles.itemImage} />
+              <Text style={styles.itemName}>{item.product_group_name}</Text>
+              <Text style={styles.itemPrice}>{item.price}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );
