@@ -53,8 +53,8 @@ export default function Chat({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    // const socket = io("http://52.78.159.41:4005/chat");
-    const socket = io("http://localhost:4005/chat");
+    const socket = io("http://52.78.159.41:4005/chat");
+    // const socket = io("http://localhost:4005/chat");
     socket.emit("join", room, user);
     socket.on("join users", (users) => {
       setUserList(users);
