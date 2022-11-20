@@ -44,6 +44,16 @@ export function reducer(state, action) {
         ...state,
         socket: action.socket,
       };
+    case "PAYMENT_DATA":
+      return {
+        ...state,
+        paymentData: action.paymentData,
+      };
+    case "PAYMENT_SELECT":
+      return {
+        ...state,
+        paymentSelectItem: action.paymentSelectItem,
+      };
     default:
       return {
         ...state,
@@ -55,6 +65,8 @@ export function reducer(state, action) {
         productGetUrl: "",
         newItemList: [],
         bestItemList: [],
+        paymentSelectItem : 1,
+        paymentData: null,
       };
   }
 }

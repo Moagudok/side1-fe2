@@ -11,13 +11,26 @@ import axios from "axios";
 
 export default function Search({ navigation }) {
   const [recentlySearchList, setRecentlySearchList] = useState([]);
+  const [tophits, setTopHits] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const recentlySearchGet = async () => {
+    const res = await axios.get(backendServer.lastSearch);
+    const searchData = JSON.parse(res.data);
+    console.log(searchData);
+    setRecentlySearchList(searchData);
+  };
+
+  const topHitsGet = async () => {
+    const res = await axios.get(backendServer.tophitSearch);
+    const searchData = JSON.parse(res.data);
+    console.log(searchData);
+    setTopHits(searchData);
+  };
+
   useEffect(() => {
-    axios.get(backendServer.lastSearch).then((res) => {
-      const searchData = JSON.parse(res.data);
-      setRecentlySearchList(searchData);
-    });
+    recentlySearchGet();
+    topHitsGet();
   }, []);
 
   const recentSearchSave = async () => {
@@ -27,6 +40,7 @@ export default function Search({ navigation }) {
   };
 
   const recentlySearchAdd = (text) => {
+    // setRecentlySearchList([...recentlySearchList, { searchText: text }]);
     setRecentlySearchList([...recentlySearchList, { searchText: text }]);
     recentSearchSave();
     setSearchText("");
@@ -121,6 +135,10 @@ export default function Search({ navigation }) {
       color: "#333",
       marginLeft: 10,
     },
+    recommendationList: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
   });
 
   return (
@@ -164,6 +182,19 @@ export default function Search({ navigation }) {
           {themeIcon.lightIcon}
           <Text style={styles.recommendationTitle}>추천 검색어</Text>
         </View>
+          <View style={styles.recommendationList}>
+          {tophits.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.recentlySearchNameBox}
+              onPress={() => {
+                recentlySearchResult(item._id);
+              }}
+            >
+              <Text style={styles.recentlySearchName}>{item._id}</Text>
+            </TouchableOpacity>
+          ))}
+          </View>
       </View>
     </View>
   );

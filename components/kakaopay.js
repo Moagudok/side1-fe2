@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 /* 아임포트 결제모듈을 불러옵니다. */
 import IMP from "iamport-react-native";
 
@@ -10,16 +11,17 @@ export function KaKaoPay({ navigation, route }) {
     navigation.replace("PaymentResult", response);
   }
 
-  const paySelect = route.params.paySelect;
+  const paymentData = useSelector((state) => state.paymentData);
+  const paySelect = route.params.payValue;
 
   /* [필수입력] 결제에 필요한 데이터를 입력합니다. */
   const data = {
     // pg: 'kakaopay', // PG사
-    pg: paySelect.kakaopay.value, // PG사
+    pg: paySelect,// PG사
     pay_method: "card",
-    name: "정기 구독 결제", // 주문명
+    name: paymentData.name, // 주문명
     merchant_uid: `mid_${new Date().getTime()}`,
-    amount: "55000",
+    amount: paymentData.price, // 결제금액
     buyer_name: "홍길동",
     buyer_tel: "01012345678",
     buyer_email: "example@naver.com",

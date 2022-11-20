@@ -6,18 +6,25 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { theme, backendServer } from "./theme";
 import { NowLoading } from "./nowLoading";
 import axios from "axios";
 
-export default function ProductList({ route, navigation }) {
+//memo
+export default memo(function ProductList({ navigation, route }) {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [productLists, setProductLists] = useState([]);
   const url = backendServer.productList + route.params.url + page;
   const totalPage = useRef(0);
   const limit = 10;
+
+  const paymentTermColor = {
+    일: "#FFB72B",
+    주: "#FE83C6",
+    월: "#DA1212",
+  };
 
   const getDATA = async () => {
     setIsLoading(true);
@@ -48,7 +55,12 @@ export default function ProductList({ route, navigation }) {
         }}
       >
         <View style={styles.productImageBox}>
-          <View style={styles.productTerm}>
+          <View
+            style={{
+              ...styles.productTerm,
+              backgroundColor: paymentTermColor[item.payment_term],
+            }}
+          >
             <Text style={styles.productTermText}>{item.payment_term} 1회</Text>
           </View>
           <Image style={styles.productImage} source={{ uri: item.image }} />
@@ -81,8 +93,7 @@ export default function ProductList({ route, navigation }) {
       />
     </View>
   );
-}
-
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   productTermText: {
-    color: "white",
+    color: "#F7F7F7",
     fontSize: 12,
   },
   productImage: {

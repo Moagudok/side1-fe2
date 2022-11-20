@@ -9,14 +9,12 @@ export default function HomeBottom( { navigation } ) {
     bottomMenu: {
       position: "absolute",
       bottom: 0,
-      left: 0,
-      backgroundColor: "#fff",
+      backgroundColor: "#F5EFE6",
       flexDirection: "row",
       justifyContent: "space-around",
       alignItems: "center",
-      borderTopWidth: 1,
-      borderTopColor: "#eee",
       paddingVertical: 10,
+      paddingHorizontal: 10,
     },
     bottomMenuItem: {
       flex: 1,
@@ -41,7 +39,7 @@ export default function HomeBottom( { navigation } ) {
                 navigation.navigate(item.menu);
               }}
             >
-              <FontAwesome5 name={item.icon} size={20} />
+              <FontAwesome5 name={item.icon} size={18} />
               <Text style={styles.bottomMenuText}>{item.name}</Text>
             </TouchableOpacity>
           );

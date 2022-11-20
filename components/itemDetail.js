@@ -5,23 +5,32 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TouchableHighlight,
+  SafeAreaView,
 } from "react-native";
-import { theme, backendServer } from "./theme";
-import { useSelector } from "react-redux";
+import { theme, themeIcon, backendServer } from "./theme";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { NowLoading } from "./nowLoading";
 import axios from "axios";
+import Cookies from 'universal-cookie';
 
 export default function ItemDetail({ route, navigation }) {
   const id = route.params.id;
   const login = useSelector((state) => state.login);
   const [data, setData] = useState({});
   const [IsLoading, setIsLoading] = useState(true);
+  const [cookies, setCookies] = useState(null);
+  const dispatch = useDispatch();
 
   const getData = async () => {
-    const res = await axios.get(backendServer.productDetail + id);
-    setData(res.data);
+    const res = await axios.get(`${backendServer.productDetail}${id}`, {
+      headers: {
+        Cookies: cookies,
+      },
+    });
+    const resData = res.data.detail_product_data
+    setCookies(new Cookies(res.headers["set-cookie"]));
+    setData(resData);
     setIsLoading(false);
   };
 
@@ -29,205 +38,225 @@ export default function ItemDetail({ route, navigation }) {
     getData();
   }, []);
 
+  useEffect(() => {
+    if(!data || !data.id) return;
+      navigation.setOptions({
+        title: `[${data.product_group_name}] ${data.product_name}`,
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontSize: 16, fontWeight: "300" },
+      });  
+  }, [data]);    
+
+  useEffect(() => {
+    dispatch({
+      type: "PAYMENT_DATA",
+      paymentData: {
+        id: data.id,
+        group_name: data.product_group_name,
+        name: data.product_name,
+        seller: data.seller,
+        price: data.price,
+        image: data.image,
+        paymentTerm: data.payment_term,
+      },
+    });
+  }, [data]);
+  
   return IsLoading ? (
     <NowLoading />
   ) : (
-    <View style={styles.container}>
-      <ScrollView
-        style={{
-          width: theme.deviceWidth,
-        }}
-      >
-        <View style={styles.itemImageBox}>
-          <View style={styles.detailImageBox}>
-            <Image style={styles.detailImage} source={{ uri: data.image }} />
-            <Text>{data.group_name}</Text>
-            <Text style={styles.itemTitle}>{data.product_name}</Text>
-            <Text style={styles.itemSubTitle}>월 구독료</Text>
-            <Text style={styles.itemPrice}>{data.price}원</Text>
-          </View>
-          <View style={styles.seller}>
-            <Text style={styles.sellerText}>{data.seller}</Text>
-            <TouchableOpacity>
-              <Text style={styles.sellerReviewPoint}>조회수 {data.views}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line}></View>
-          <Text style={styles.itemDescTitle}>상품설명</Text>
-
-          <View style={styles.notedInfomation}>
-            <Text style={styles.notedInfomationTitle}>{data.description}</Text>
-          </View>
-          {data.productimages === undefined ? null : (
-            <View style={styles.notedInfomation}>
-              <Text style={styles.itemDescTitle}>상품 이미지</Text>
-              <View style={styles.notedInfomationImageBox}>
-                {data.productimages.map((item) => (
-                  <Image
-                    key={item.id}
-                    style={styles.detailImage}
-                    source={{ uri: item.image }}
-                  />
-                ))}
-              </View>
-            </View>
-          )}
-          <View style={styles.sellerInfo}>
-            <Text style={styles.sellerInfoText}>
-              등록된 판매 상품과 상품의 내용, 거래 정보 및 가격은 판매자가
-              등록한 것으로 구독마켓은 해당 내용에 대하여 일체의 책임을 지지
-              않습니다.
-            </Text>
+    <View>
+      <ScrollView style={styles.container}>
+        <View style={styles.backButton}>
+          <TouchableOpacity style={{width: 50, height: 50,}}onPress={() => navigation.goBack()}>
+            {themeIcon.backButton}
+          </TouchableOpacity>
+          <View style={styles.viewsBox}>
+            <Text style={styles.views}>조회수 {data.views}</Text>
           </View>
         </View>
+        <View>
+          <Image source={{ uri: data.image }} style={styles.image} />
+        </View>
+        <View style={styles.productInfo}>
+          <View style={styles.subNumBox}>
+            <Text style={styles.subNumText}>
+              구독자수 {data.num_of_subscribers}
+            </Text>
+          </View>
+          <Text style={styles.sellerName}>{data.seller}</Text>
+          <Text style={styles.productGroupName}>{data.product_group_name}</Text>
+          <Text style={styles.productName}>{data.product_name}</Text>
+          <Text style={styles.productTerm}>{data.payment_term} 1회 배송</Text>
+          <Text style={styles.productPrice}>
+            {data.price.toLocaleString()}원
+          </Text>
+          <View style={styles.line} />
+          <Text style={styles.productDescription}>{data.description}</Text>
+        </View>
+        <View style={styles.detailInfo}>
+          {!data.productimages
+            ? null
+            : data.productimages.map((item) => {
+                return (
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.detailImage}
+                    key={item.id}
+                  />
+                );
+              })}
+        </View>
+        <View style={styles.line} />
+        <View style={styles.precautions}>
+          <Text style={styles.precautionsTitle}>주의사항</Text>
+          <Text style={styles.precautionsText}>
+            등록된 판매 상품과 상품의 내용, 거래 정보 및 가격은 판매자가 등록한
+            것으로 모아구독은 해당 내용에 대하여 일체의 책임을 지지 않습니다.
+          </Text>
+        </View>
       </ScrollView>
-      <TouchableHighlight
-        underlayColor={"#000000"}
-        style={styles.bottomMenu}
+      <TouchableOpacity
+        style={styles.buyButton}
         onPress={() => {
           login
-            ? navigation.navigate("Payments", {
-                id: 1,
-                name: data.group_name,
-                price: data.price,
-                image: data.image,
-              })
+            ?
+            navigation.navigate("Payments")
             : navigation.navigate("LoginPage");
         }}
       >
-        <View>
-          <Text style={styles.bottomMenuText}>구독하기</Text>
-        </View>
-      </TouchableHighlight>
+        <Text style={styles.buyButtonText}>구독하기</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    backgroundColor: "white",
+    marginBottom: 50,
   },
-  itemImageBox: {
-    width: theme.deviceWidth,
-    alignItems: "center",
-    backgroundColor: "#fff",
+  viewsBox: {
+    backgroundColor: "white",
+    padding: 3,
+    borderRadius: 5,
+    fontWeight: "bold",
   },
-  detailImageBox: {
+  views: {
+    color: "gray",
+    fontSize: 12,
+  },
+  image: {
     width: theme.deviceWidth,
-    justifyContent: "center",
-    alignItems: "center",
+    height: theme.deviceWidth,
+    resizeMode: "cover",
+  },
+  productInfo: {
+    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    top: -20,
+    zIndex: 1,
+    backgroundColor: "white",
+  },
+  subNumBox: {
+    borderRadius: 5,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  subNumText: {
+    color: "gray",
+    fontSize: 12,
+  },
+  sellerName: {
+    fontSize: 14,
+    fontWeight: "300",
+    marginBottom: 5,
+    color: "#B2B2B2",
+  },
+  productGroupName: {
+    fontSize: 14,
+    fontWeight: "200",
+    marginBottom: 5,
+  },
+  productName: {
+    fontSize: 25,
+    fontWeight: "300",
+    color: theme.fontColor,
+    marginBottom: 10,
+  },
+  productTerm: {
+    fontSize: 14,
+    fontWeight: "300",
+    color: "#000000",
+    marginBottom: 5,
+  },
+  productPrice: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#ff0000",
+  },
+  line: {
+    marginHorizontal: -20,
+    height: 1,
+    backgroundColor: "#F9F2ED",
+    marginVertical: 10,
+    marginVertical: 20,
+  },
+  productDescription: {
+    fontSize: 16,
+    color: theme.fontColor,
   },
   detailImage: {
     width: theme.deviceWidth,
     height: theme.deviceWidth,
-    marginBottom: 20,
+    resizeMode: "cover",
+    marginBottom: 1,
   },
-  itemTitle: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginTop: 10,
-    letterSpacing: 2,
-    color: "#000",
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-    letterSpacing: 2,
-    color: "#f4511e",
-  },
-  itemSubTitle: {
-    fontSize: 14,
-    marginTop: 10,
-    letterSpacing: 2,
-    color: "#000",
-  },
-  itemDescTitle: {
-    textAlign: "center",
-    fontSize: 19,
-    marginTop: 20,
-    letterSpacing: 2,
-    fontWeight: "500",
-    marginBottom: 20,
-  },
-  line: {
-    width: theme.deviceWidth - 80,
-    height: 1,
-    backgroundColor: "#ededed",
-    marginTop: 20,
-  },
-  bottomMenu: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f4511e",
+  buyButton: {
     position: "absolute",
-    bottom: 0,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  bottomMenuText: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    letterSpacing: 2,
-  },
-  itemDescImgae: {
+    padding: 20,
     width: theme.deviceWidth,
-    marginTop: 20,
-    resizeMode: "contain",
-  },
-  sellerInfo: {
-    width: "100%",
-    height: 100,
-    padding: 20,
-    marginBottom: 40,
-  },
-  sellerInfoText: {
-    fontSize: 12,
-    letterSpacing: 2,
-    color: "#E14D2A",
-  },
-  sellerInfoText: {
-    fontSize: 12,
-    letterSpacing: 2,
-    color: "#E14D2A",
-  },
-  seller: {
-    width: "90%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    backgroundColor: "#ff0000",
+    justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    backgroundColor: "#ededed",
-    marginTop: 20,
-    borderRadius: 10,
+    bottom: 0,
   },
-  sellerText: {
-    fontSize: 14,
+  buyButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "300",
     letterSpacing: 2,
-    color: "#000",
-    fontWeight: "bold",
+    fontWeight: "300",
   },
-  sellerReviewPoint: {
-    fontSize: 14,
-    letterSpacing: 2,
-    color: "#E14D2A",
-  },
-  notedInfomation: {
+  precautions: {
     padding: 20,
   },
-  notedInfoTextBox: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    marginBottom: 3,
+  precautionsTitle: {
+    fontSize: 16,
+    fontWeight: "300",
+    color: theme.fontColor,
+    marginBottom: 10,
   },
-  notedInfoText: {
-    fontSize: 12,
-    letterSpacing: 2,
-    color: "#000",
+  precautionsText: {
+    fontSize: 14,
+    fontWeight: "300",
+    color: theme.fontColor,
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    zIndex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: theme.deviceWidth - 40,
+    zIndex: 1,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: "300",
+    color: theme.fontColor,
   },
 });

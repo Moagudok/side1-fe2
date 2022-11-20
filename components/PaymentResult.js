@@ -38,17 +38,17 @@ export const PaymentResult = ({ route, navigation }) => {
 
     return (
       <View style={styles.container}>
-        {imp_success === "ture" ? (
+        {imp_success === "true" ? (
           <View>
             <Text style={styles.paymentResultText}>
               결제가 완료 되셨습니다.
             </Text>
             <TouchableOpacity onPress={
-                () => navigation.navigate('Mypage')
+                () => navigation.navigate('Home')
             }>
               <View style={styles.paymentResultButton}>
                 <Text style={styles.paymentResultButtonText}>
-                  마이페이지로 이동하기
+                  메인화면으로 이동하기
                 </Text>
               </View>
             </TouchableOpacity>

@@ -12,7 +12,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { theme } from "./theme";
 import axios from "axios";
-import { map } from "jquery";
 
 export default function Chat({ navigation, route }) {
   const { name, image, room, user } = route.params;

@@ -17,6 +17,7 @@ import {PaymentResult} from "./components/PaymentResult";
 import { Logout } from "./components/logout";
 import { headerOption } from "./headerOptions";
 import {PaymentSelect} from "./components/paymentSelect";
+import {Text, View} from "react-native";
 
 export default function App({ navigation }) {
   const Stack = createNativeStackNavigator();
@@ -29,12 +30,18 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={headerOption("Home")}
+            options={headerOption("모아 구독")}
           />
           <Stack.Screen
             name="ItemDetail"
             component={ItemDetail}
-            options={{ ...headerOption("상품 상세") }}
+            options={{ ...headerOption("상품 상세"), headerShown: false, headerLeft: () => {
+                return (
+                  <View style={{ marginLeft: 20 }}>
+                    <Text onPress={() => navigation.goBack()}>뒤로</Text>
+                  </View>
+                );
+              }, }}
           />
           <Stack.Screen
             name="Mypage"
@@ -67,7 +74,7 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="Payments"
             component={Payments}
-            options={headerOption("결제")}
+            options={headerOption("결제 정보 입력")}
           />
           <Stack.Screen
             name="LoginPage"
@@ -77,7 +84,7 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="KaKaoPay"
             component={KaKaoPay}
-            options={headerOption("카카오페이 결제")}
+            options={headerOption("결제 진행중")}
           />
           <Stack.Screen
             name="PaymentResult"

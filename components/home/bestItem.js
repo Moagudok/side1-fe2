@@ -2,42 +2,15 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { theme } from "../theme";
 import { useSelector } from "react-redux";
+import { styles } from "./homeScrollitemStyle";
+import { Shadow } from "react-native-shadow-2";
 
 export default function BestItem({ navigation }) {
   const bestItemList = useSelector((state) => state.bestItemList);
-  const styles = StyleSheet.create({
-    itemBox: {
-      paddingHorizontal: 20,
-      marginTop: 20,
-    },
-    itemImage: {
-      width: theme.deviceWidth * 0.4,
-      height: theme.deviceWidth * 0.4,
-      borderRadius: 10,
-      marginRight: 10,
-    },
-    itemName: {
-      marginVertical: 5,
-      fontSize: 15,
-      fontWeight: "bold",
-      marginBottom: 5,
-      marginTop: 10,
-    },
-    itemPrice: {
-      fontSize: 12,
-      color: "#999",
-    },
-    itemTitle: {
-      fontSize: 16,
-      marginBottom: 10,
-    },
-  });
 
   return (
     <View style={styles.itemBox}>
@@ -49,9 +22,17 @@ export default function BestItem({ navigation }) {
             onPress={() => navigation.navigate("ItemDetail", { id: item.id })}
           >
             <View>
+              <View style={styles.itemImageBox}>
               <Image source={{ uri: item.image }} style={styles.itemImage} />
-              <Text style={styles.itemName}>{item.product_group_name}</Text>
-              <Text style={styles.itemPrice}>{item.price}</Text>
+              </View>
+                <Text style={styles.paymentTermText}>주 1회</Text>
+              <Text style={styles.itemGroupName}>
+                {item.product_group_name}
+              </Text>
+              <Text style={styles.itemName}>{item.product_name}</Text>
+              <Text style={styles.itemPrice}>
+                {item.price.toLocaleString()}원
+              </Text>
             </View>
           </TouchableOpacity>
         ))}

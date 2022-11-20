@@ -2,17 +2,19 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TextInput,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { theme } from "./theme";
-import { useState } from "react";
-import {PaymentSelectModal} from "./paymentSelect";
-
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { styles } from "./paymentStyle";
+import { payselectList } from "./paymentSelectList";
 
 export default function Payments({ navigation, route }) {
+  const paymentSelectItem = useSelector((state) => state.paymentSelectItem);
+  const paymentData = useSelector((state) => state.paymentData);
+  const dispatch = useDispatch();
   const [subscriptionPeriod, setSubscriptionPeriod] = useState({
     start: new Date().toISOString().slice(0, 10),
     end: new Date(new Date().setMonth(new Date().getMonth() + 1))
@@ -20,120 +22,81 @@ export default function Payments({ navigation, route }) {
       .slice(0, 10),
   });
 
-  const { id, name, group_name, image, price, description, views } =
-    route.params;
-
-  const paySelect = {
-    kakaopay: { name: "카카오페이", value: "kakaopay" },
-    tosspay: { name: "토스페이", value: "tosspay" },
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: theme.bgColor,
-      paddingHorizontal: 20,
-      marginBottom: 50,
-    },
-    paymentTitle: {
-      fontSize: 20,
-      fontWeight: "bold",
-      textAlign: "center",
-      marginTop: 20,
-      marginBottom: 20,
-    },
-    itemImage: {
-      width: theme.deviceWidth - 40,
-      height: 200,
-      resizeMode: "cover",
-      borderRadius: 10,
-    },
-    itemTitle: {
-      fontSize: 40,
-      fontWeight: "bold",
-      marginTop: 20,
-    },
-    itemPrice: {
-      fontSize: 22,
-      fontWeight: "bold",
-      marginTop: 10,
-      color: theme.primaryColor,
-    },
-    subDate: {
-      fontSize: 18,
-      marginTop: 10,
-      color: theme.primaryColor,
-    },
-    inputBox: {
-      padding: 15,
-      fontSize: 15,
-      backgroundColor: "#fff",
-      marginTop: 5,
-      borderRadius: 10,
-      marginBottom: 5,
-    },
-    paymentChoiceTitle: {
-      fontSize: 12,
-      marginTop: 25,
-      marginBottom: 10,
-    },
-    paymentChoiceBox: {
-      borderRadius: 10,
-      padding: 20,
-      marginTop: 5,
-      backgroundColor: "yellow",
-    },
-    paymentSelect: {
-      textAlign: "center",
-      fontSize: 16,
-      fontWeight: "bold",
-      color: "#000",
-    },
-    paymentComplete: {
-      borderRadius: 10,
-      marginTop: 10,
-    },
-  });
+  useEffect(() => {
+    console.log("paymentSelectItem", paymentSelectItem);
+    console.log(payselectList[paymentSelectItem -1].value);
+    console.log("paymentData", paymentData);
+  }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.paymentTitle}>결제 정보 입력</Text>
-      <Image style={styles.itemImage} source={{ uri: image }} />
-      <Text style={styles.itemTitle}>{name}</Text>
-      <Text style={styles.itemPrice}>월 구독료 {price}원</Text>
-      <Text style={styles.subDate}>
-        구독 기간 {subscriptionPeriod.start} ~ {subscriptionPeriod.end}
-      </Text>
-      <Text style={styles.paymentChoiceTitle}>결제 방법 선택</Text>
-      <TouchableOpacity
-        style={styles.paymentChoiceBox}
-        onPress={() => navigation.navigate("PaymentSelect")}
-      >
-        <Text style={styles.paymentSelect}>카카오 페이 결제</Text>
-      </TouchableOpacity>
-      <Text style={styles.paymentChoiceTitle}>배송정보 입력</Text>
-      <TextInput style={styles.inputBox} placeholder="성함" />
-      <TextInput style={styles.inputBox} placeholder="주소를 입력해주세요." />
-      <TextInput
-        keyboardType="numeric"
-        style={styles.inputBox}
-        placeholder="휴대폰 번호를 입력해주세요."
-      />
-      <View style={styles.paymentComplete}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: theme.primaryColor,
-            padding: 15,
-            borderRadius: 10,
-          }}
-          onPress={() =>
-            navigation.navigate("KaKaoPay", { paySelect: paySelect })
-          }
-        >
-          <Text style={{ color: "#fff", textAlign: "center", fontSize: 15 }}>
-            결제하기
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <View>
+        <Text style={styles.paymentinfoTitle}>결제 상품 정보</Text>
+      </View>
+      <View style={styles.paymentItemInfoImage}>
+        <Image source={{ uri: paymentData.image }} style={styles.paymentinfoImage} />
+        <View style={styles.paymentItemInfoText}>
+        <Text style={styles.paymentinfoSeller}>{paymentData.seller}</Text>
+          <Text style={styles.paymentinfoGroupName}>{paymentData.group_name}</Text>
+          <Text style={styles.paymentinfoName}>{paymentData.name}</Text>
+          <Text style={styles.paymentinfoPrice}>
+            {paymentData.price.toLocaleString()}원
           </Text>
+          <Text style={styles.paymentTerm}>{paymentData.paymentTerm} 1회 배송</Text>
+        </View>
+      </View>
+      <View style={styles.paymentMethod}>
+        <Text style={styles.paymentinfoTitle}>결제 수단</Text>
+        <TouchableOpacity
+          style={{...styles.paymentMethodButton, backgroundColor: payselectList[paymentSelectItem - 1].bgcolor}}
+          onPress={() => navigation.navigate("PaymentSelect")}
+        >
+          <Text style={{...styles.paymentMethodText, color: payselectList[paymentSelectItem - 1].color}}>{payselectList[paymentSelectItem - 1].name}</Text>
+        </TouchableOpacity>
+      </View>
+      <View>
+        <Text style={styles.paymentinfoTitle}>결제 정보 입력</Text>
+      </View>
+      <View style={styles.paymentInputBox}>
+        <TextInput
+          style={styles.paymentinfoInput}
+          placeholder="배송 받으실 분 이름을 입력해주세요."
+        />
+        <TextInput
+          keyboardType="numeric"
+          style={styles.paymentinfoInput}
+          placeholder="배송 받으실 분 연락처를 입력해주세요."
+        />
+        <TextInput
+          keyboardType="email-address"
+          style={styles.paymentinfoInput}
+          placeholder="배송 받으실 분 이메일을 입력해주세요."
+        />
+        <TextInput
+          style={styles.paymentinfoInput}
+          placeholder="배송 받으실 분 주소를 입력해주세요."
+        />
+        <TextInput style={styles.paymentinfoInput} placeholder="상세 주소" />
+      </View>
+      <Text style={styles.subscriptionPeriod}>
+        구독기간 : {subscriptionPeriod.start} ~ {subscriptionPeriod.end}
+      </Text>
+      <Text style={styles.conditions}>
+        위 주문 내용을 확인 하였으며, 구독에 동의합니다. 회원 본인은 개인정보
+        이용 및 제공 및 결제에 동의 합니다.
+      </Text>
+      <View style={styles.paymentButtonBox}>
+        <TouchableOpacity style={styles.paymentButton}
+        onPress={() => navigation.navigate("KaKaoPay",{
+          payValue: payselectList[paymentSelectItem - 1].value,
+        })}
+        >
+          <Text style={styles.paymentButtonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
