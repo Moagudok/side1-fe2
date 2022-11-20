@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import { theme, themeIcon, backendServer } from "./theme";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +17,7 @@ export default function ItemDetail({ route, navigation }) {
   const id = route.params.id;
   const login = useSelector((state) => state.login);
   const [data, setData] = useState({});
+  const [sellerItem, setSellerItem] = useState();
   const [IsLoading, setIsLoading] = useState(true);
   const [cookies, setCookies] = useState(null);
   const dispatch = useDispatch();
@@ -29,8 +29,10 @@ export default function ItemDetail({ route, navigation }) {
       },
     });
     const resData = res.data.detail_product_data
+    const sellerItem = res.data.other_products_data
     setCookies(new Cookies(res.headers["set-cookie"]));
     setData(resData);
+    setSellerItem(sellerItem);
     setIsLoading(false);
   };
 
@@ -91,6 +93,27 @@ export default function ItemDetail({ route, navigation }) {
           <Text style={styles.productPrice}>
             {data.price.toLocaleString()}원
           </Text>
+          <View style={styles.sellerItem}>
+            <Text style={styles.sellerItemTitle}>판매자 상품</Text>
+            <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            >
+              {sellerItem.map((item, index) => (
+                <TouchableOpacity style={styles.sellerItemBox}
+                  key={index}
+                  onPress={() => {
+                    navigation.replace("ItemDetail", { id: item.id });
+                  }}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.sellerItemImage}
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
           <View style={styles.line} />
           <Text style={styles.productDescription}>{data.description}</Text>
         </View>
@@ -258,5 +281,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "300",
     color: theme.fontColor,
+  },
+  sellerItem: {
+    marginTop: 20,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#F9F2ED",
+    borderRadius: 10,
+    padding: 10,
+  },
+  sellerItemTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: theme.fontColor,
+    marginBottom: 10,
+  },
+  sellerItemBox: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginRight: 10,
+  },
+  sellerItemImage: {
+    width: 100,
+    height: 100,
+    resizeMode: "cover",
+    borderRadius: 10,
   },
 });

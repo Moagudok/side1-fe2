@@ -29,10 +29,13 @@ export const backendServer = {
   category: `${backSrv}/consumer/product/category/`,
   productList: `${backSrv}/consumer/product/`,
   productDetail: `${backSrv}/consumer/product/detail/`,
-  homeApi : `${backSrv}/consumer/home/`,
+  homeApi : `${backSrv}/consumer/home`,
   lastSearch : `${backSrv}/search/latest`,
   tophitSearch : `${backSrv}/search/tophits`,
 };
 
 // http://52.79.143.145:8001/consumer/product/list?category=1&search&page=1
 
+// http://52.79.143.145:8001/consumer/home/
+
+// http://52.79.143.145:8001/consumer/product/detail/1
