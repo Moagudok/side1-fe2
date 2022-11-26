@@ -41,7 +41,7 @@ export default function Search({ navigation }) {
         Authorization: `Bearer ${access}`,
       },
     };
-    const bodyText = {search : text}
+    const bodyText = { search: text }
     try {
       const res = await axios.post(backendServer.lastSearch, bodyText, body);
     }
@@ -63,8 +63,10 @@ export default function Search({ navigation }) {
   }, []);
 
   const recentlySearchAdd = (text) => {
-    setRecentlySearchList([...recentlySearchList, { searchText: text }]);
-    recentSearchSave(text);
+    if (!recentlySearchList.includes(text)) {
+      setRecentlySearchList([{ searchText: text }, ...recentlySearchList]);
+      recentSearchSave(text);
+    }
     setSearchText("");
     navigation.navigate("ProductList", {
       search: "search",
