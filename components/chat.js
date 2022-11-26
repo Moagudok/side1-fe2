@@ -10,30 +10,26 @@ import {
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
-import { theme } from "./theme";
 import axios from "axios";
 
 export default function Chat({ navigation, route }) {
   const { name, image, room, user, userName } = route.params;
   const [message, setMessage] = useState("");
-  // const chatMessages = useSelector((state) => state.chatMessages);
   const socket = useSelector((state) => state.socket);
   const [userList, setUserList] = useState();
   const [pageLoad, setPageLoad] = useState();
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
+  const chatDataIp = `http://52.79.183.13:8008/chatList/?room=${room}`;
+  const chatSocketIp = `http://52.79.183.13:8008/chat`
   const userInfo = useSelector((state) => state.userInfo);
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
   const chatdataGet = async () => {
-    try{
-    const res = await axios.get(
-      // `http://52.78.159.41:4005/chatList/?room=${room}`
-      // `http://52.79.183.13:8008/chatList/?room=${room}`
-      `http://localhost:8008/chatList/?room=${room}`
-    );
-    dispatch({ type: "RESET_CHAT_MESSAGE", list: res.data });
+    try {
+      const res = await axios.get(chatDataIp);
+      dispatch({ type: "RESET_CHAT_MESSAGE", list: res.data });
     } catch (e) {
       console.log("chatdataGet error", e);
       console.log(e);
@@ -59,8 +55,7 @@ export default function Chat({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    // const socket = io("http://52.78.159.41:4005/chat");
-    const socket = io("http://localhost:8008/chat");
+    const socket = io(chatSocketIp);
     socket.emit("join", room, user);
     socket.on("join users", (users) => {
       setUserList(users);
