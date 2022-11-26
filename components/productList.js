@@ -13,12 +13,10 @@ import axios from "axios";
 
 //memo
 export default memo(function ProductList({ navigation, route }) {
-  const [page, setPage] = useState(1);
+  const urlparams = route.params.url;
   const [isLoading, setIsLoading] = useState(true);
   const [productLists, setProductLists] = useState([]);
-  const url = backendServer.productList + route.params.url + page;
-  const totalPage = useRef(0);
-  const limit = 10;
+  const [url, setUrl] = useState(backendServer.productList + urlparams);
 
   const paymentTermColor = {
     일: "#FFB72B",
@@ -28,24 +26,20 @@ export default memo(function ProductList({ navigation, route }) {
 
   const getDATA = async () => {
     setIsLoading(true);
+    if(url === null) {
+      setIsLoading(false);
+      return;
+    }
     const res = await axios.get(url);
     const data = res.data;
-    totalPage.current = Math.ceil(data.count / limit);
     setProductLists([...productLists, ...data.results]);
+    setUrl(data.next);
     setIsLoading(false);
   };
 
   useEffect(() => {
     getDATA();
   }, []);
-
-  const addData = () => {
-    if (!isLoading && page <= totalPage.current) {
-      setPage(page + 1);
-      getDATA();
-    }
-    return null;
-  };
 
   const ProductRenderItem = ({ item, navigation }) => {
     return (
@@ -85,7 +79,7 @@ export default memo(function ProductList({ navigation, route }) {
           />
         )}
         keyExtractor={(item, index) => index.toString()}
-        onEndReached={addData}
+        onEndReached={getDATA}
         numColumns={2}
         onEndReachedThreshold={0.5}
         ListFooterComponent={() => {

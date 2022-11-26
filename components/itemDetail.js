@@ -16,13 +16,13 @@ import Cookies from 'universal-cookie';
 export default function ItemDetail({ route, navigation }) {
   const id = route.params.id;
   const login = useSelector((state) => state.login);
+  const userInfo = useSelector((state) => state.userInfo);
   const [data, setData] = useState({});
   const [sellerItem, setSellerItem] = useState();
   const [IsLoading, setIsLoading] = useState(true);
   const [cookies, setCookies] = useState(null);
+  const [sub, setSub] = useState(false);
   const dispatch = useDispatch();
-  const paymentData = useSelector((state) => state.paymentData);
-
 
   const getData = async () => {
     const res = await axios.get(`${backendServer.productDetail}${id}`, {
@@ -40,6 +40,10 @@ export default function ItemDetail({ route, navigation }) {
 
   useEffect(() => {
     getData();
+    const check = userInfo.sub_product.includes(id.toString());
+    if (check) {
+      setSub(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -137,8 +141,10 @@ export default function ItemDetail({ route, navigation }) {
           </Text>
         </View>
       </ScrollView>
+
       <TouchableOpacity
-        style={styles.buyButton}
+        disabled={sub}
+        style={{ ...styles.buyButton, backgroundColor: sub ? "#e0e0e0" : "#ff5a5f" }}
         onPress={() => {
           login
             ?
@@ -146,8 +152,9 @@ export default function ItemDetail({ route, navigation }) {
             : navigation.navigate("LoginPage");
         }}
       >
-        <Text style={styles.buyButtonText}>구독하기</Text>
+        {sub ? <Text style={styles.buyButtonText}>구독중</Text> : <Text style={styles.buyButtonText}>구독하기</Text>}
       </TouchableOpacity>
+
     </View>
   );
 }

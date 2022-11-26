@@ -32,7 +32,7 @@ export const stackStyle = {
 
 export const backendServer = {
   category: `${backSrv}/consumer/product/category/`,
-  productList: `${backSrv}/consumer/product/`,
+  productList: `${backSrv}/consumer/product/cursor/list?`,
   productDetail: `${backSrv}/consumer/product/detail/`,
   homeApi: `${backSrv}/consumer/home`,
   lastSearch: `${backSrv3}/search/latest`,
@@ -44,6 +44,8 @@ export const backendServer = {
   paymentData: `${backSrv}/consumer/mypage?type=sub`,
   payment: `${backSrv5}/payment`,
 };
+
+// http://52.79.143.145:8001/consumer/product/cursor/list?category=1&search&cursor
 
 // http://52.79.143.145:8001/consumer/product/list?category=1&search&page=1
 

@@ -59,7 +59,7 @@ export default function Category({ navigation }) {
                   navigation.navigate("ProductList", {
                     categoryId: item.id,
                     categoryName: item.name,
-                    url: `list?category=${item.id}&search&page=`,
+                    url: `category=${item.id}&search&cursor`,
                   });
                 }}
               >

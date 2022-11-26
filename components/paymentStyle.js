@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
         marginTop: 10,
         flexDirection: "row",
         marginBottom: 30,
-        alignItems: "center",
     },
     paymentinfoImage: {
         width: theme.deviceWidth * 0.4,

@@ -36,7 +36,6 @@ export default function Search({ navigation }) {
   const recentSearchSave = async (text) => {
     const refreshToken = await AsyncStorage.getItem("refresh");
     const access = await refresh(refreshToken);
-    console.log(access)
     const body = {
       headers: {
         Authorization: `Bearer ${access}`,
@@ -70,7 +69,7 @@ export default function Search({ navigation }) {
     navigation.navigate("ProductList", {
       search: "search",
       searchText: text,
-      url: `list?category&search=${text}&page=`,
+      url: `category&search=${text}&cursor`,
     });
   };
 
@@ -78,7 +77,7 @@ export default function Search({ navigation }) {
     navigation.navigate("ProductList", {
       search: "search",
       searchText: text,
-      url: `list?category&search=${text}&page=`,
+      url: `category&search=${text}&cursor`,
     });
   };
 
