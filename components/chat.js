@@ -14,23 +14,30 @@ import { theme } from "./theme";
 import axios from "axios";
 
 export default function Chat({ navigation, route }) {
-  const { name, image, room, user } = route.params;
+  const { name, image, room, user, userName } = route.params;
   const [message, setMessage] = useState("");
   // const chatMessages = useSelector((state) => state.chatMessages);
   const socket = useSelector((state) => state.socket);
-  const [pageLoad, setPageLoad] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const [userList, setUserList] = useState();
+  const [pageLoad, setPageLoad] = useState();
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
+  const userInfo = useSelector((state) => state.userInfo);
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
   const chatdataGet = async () => {
+    try{
     const res = await axios.get(
-      `http://52.78.159.41:4005/chatList/?room=${room}`
+      // `http://52.78.159.41:4005/chatList/?room=${room}`
+      // `http://52.79.183.13:8008/chatList/?room=${room}`
+      `http://localhost:8008/chatList/?room=${room}`
     );
     dispatch({ type: "RESET_CHAT_MESSAGE", list: res.data });
+    } catch (e) {
+      console.log("chatdataGet error", e);
+      console.log(e);
+    }
   };
 
   const chatJoin = () => {
@@ -52,8 +59,8 @@ export default function Chat({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    const socket = io("http://52.78.159.41:4005/chat");
-    // const socket = io("http://localhost:4005/chat");
+    // const socket = io("http://52.78.159.41:4005/chat");
+    const socket = io("http://localhost:8008/chat");
     socket.emit("join", room, user);
     socket.on("join users", (users) => {
       setUserList(users);
@@ -79,13 +86,13 @@ export default function Chat({ navigation, route }) {
 
   useEffect(() => {
     if (socket) {
-      socket.on("chat message", (room, user, message) => {
+      socket.on("chat message", (room, user, userName, message) => {
         socket.on("join users", (users) => {
           setUserList(users);
         });
         dispatch({
           type: "ADD_CHAT_MESSAGE",
-          message: { room, user, message, time: new Date() },
+          message: { room, user, message, userName, time: new Date() },
         });
       });
     }
@@ -99,11 +106,11 @@ export default function Chat({ navigation, route }) {
 
   const sendMessage = () => {
     if (message) {
-      socket.emit("chat message", room, user, message);
+      socket.emit("chat message", room, user, userName, message);
       setMessage("");
       dispatch({
         type: "ADD_CHAT_MESSAGE",
-        message: { user, message, room, time: new Date() },
+        message: { userName, user, message, room, time: new Date() },
       });
     }
   };
@@ -116,6 +123,7 @@ export default function Chat({ navigation, route }) {
           alignItems: "center",
           justifyContent: "space-between",
           backgroundColor: "#000",
+          marginBottom: 10,
         }}
       >
         <Image style={{ width: 70, height: 70 }} source={image} />
@@ -130,17 +138,6 @@ export default function Chat({ navigation, route }) {
           {name}
         </Text>
       </View>
-      {userList ? (
-        <View style={{ flexDirection: "row", backgroundColor: "skyblue" }}>
-          {userList.map((item, index) => (
-            <Text key={index} style={{ margin: 10, color: "#000" }}>
-              {item.user}
-            </Text>
-          ))}
-        </View>
-      ) : (
-        <Text style={{ margin: 10, color: "#000" }}>{user}</Text>
-      )}
       <FlatList
         ref={scrollViewRef}
         onContentSizeChange={() =>
@@ -159,14 +156,14 @@ export default function Chat({ navigation, route }) {
           room === item.room ? (
             <View
               style={{
-                alignItems: item.user === user ? "flex-end" : "flex-start",
+                alignItems: item.userName === userName ? "flex-end" : "flex-start",
+                marginBottom: 10,
               }}
             >
               <View
                 style={{
                   borderRadius: 10,
-                  margin: 5,
-                  backgroundColor: item.user === user ? "yellow" : "#eee",
+                  backgroundColor: item.userName === userName ? "yellow" : "#eee",
                 }}
               >
                 <Text
@@ -174,7 +171,7 @@ export default function Chat({ navigation, route }) {
                     padding: 10,
                     fontSize: 14,
                     fontWeight: "300",
-                    color: item.user === user ? "#000" : "#000",
+                    color: item.userName === userName ? "#000" : "#000",
                   }}
                 >
                   {item.message}
@@ -182,7 +179,7 @@ export default function Chat({ navigation, route }) {
               </View>
               <View
                 style={{
-                  alignItems: item.user === user ? "flex-end" : "flex-start",
+                  alignItems: item.userName === userName ? "flex-end" : "flex-start",
                 }}
               >
                 <Text
@@ -193,7 +190,7 @@ export default function Chat({ navigation, route }) {
                     color: "#000",
                   }}
                 >
-                  {item.user}
+                  {item.userName}
                 </Text>
                 <Text
                   style={{
@@ -250,7 +247,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     backgroundColor: "yellow",
     padding: 10,
-    marginLeft: 50,
     borderRadius: 10,
     marginBottom: 10,
   },
@@ -260,7 +256,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
-    marginRight: 50,
   },
   myMessageText: {
     color: "#000",

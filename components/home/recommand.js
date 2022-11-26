@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 12,
     width: theme.deviceWidth - 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     color: "white",

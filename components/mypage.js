@@ -1,151 +1,72 @@
 import { View, Text, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { theme, themeIcon } from "./theme";
+import { theme, themeIcon, backendServer } from "./theme";
 import { useSelector } from "react-redux";
+import { refresh } from "./refresh";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Mypage({ navigation }) {
-  const [searchText, setSearchText] = useState("");
   const login = useSelector((state) => state.login);
+  const userInfo = useSelector((state) => state.userInfo);
+  const [PaymentData, setPaymentData] = useState([]);
   const [user, setUser] = useState(null);
+
+  const GetPaymentData = async () => {
+    const refreshToken = await AsyncStorage.getItem("refresh");
+    const accessToken = await refresh(refreshToken);
+    const auth = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    try {
+      const res = await axios.get(backendServer.paymentData, auth);
+      setPaymentData(res.data)
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 
   useEffect(() => {
     !login ? navigation.navigate("Home") : null;
   }, [login]);
 
-  useEffect(() => { 
+  useEffect(() => {
     setUser("user" + Math.floor(Math.random() * 1000));
+    GetPaymentData();
   }, []);
 
-  const orderList = [
-    {
-        name: "프리미엄 오일 레몬 허브 100ml",
-        date: "주1회 (토)",
-        price: "구독료 1,000원",
-        orderStatus: "구독중",
-        image: {
-            uri: "https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1466071146574l0.jpg",
-        },
-        room: "room1",
-            
-    },
-    {
-        name: "홍대 쭈꾸미 1kg",
-        date: "주1회 (토)",
-        price: "구독료 2,000원",
-        orderStatus: "구독만료",
-        image:
-        {uri: "https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/e3d6f36e-f1e4-474c-bea8-38e1abb7113a.jpg",},
-        room: "room2",
-        
-
-    },
-    {
-        name: "프리미엄 손질 생새우살 200g",
-        date: "주1회 (월)",
-        price: "구독료 3,000원",
-        orderStatus: "구독취소중",
-        image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653040890807l0.jpeg",},
-        room: "room3",
-    },
-    {
-        name: "한우 불고기 1kg",
-        date: "주2회 (화,목)",
-        price: "구독료 4,000원",
-        orderStatus: "취소완료",
-        image:
-        {uri:"https://product-image.kurly.com/cdn-cgi/image/width=400,format=auto/product/image/2bac77f7-2ed8-4a60-b5ec-d1494f591ead.jpg",},
-        room: "room4",
-    },
-    {
-        name: "치즈롤 돈카츠 150g 2개",
-        date: "주1회 (토)",
-        price: "구독료 5,000원",
-        orderStatus: "구독중",
-        image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/165104939315l0.jpg",},
-        room: "room5",
-    },
-    {
-        name: "고추장 제육 돈 불고기 600g",
-        date: "주1회 (토)",
-        price: "구독료 6,000원",
-        orderStatus: "구독중",
-        image:
-        {uri:"https://img-cf.kurly.com/cdn-cgi/image/width=400,format=auto/shop/data/goods/1653038532582l0.jpeg",},
-        room: "room6",
-    },
-  ]
   return (
     <View style={styles.container}>
-      <View style={styles.searchBox}>
-        <TextInput
-          value={searchText}
-          onChangeText={(text) => setSearchText(text)}
-          onSubmitEditing={(e) => recentlySearchAdd(e.nativeEvent.text)}
-          placeholder="상품명을 입력해주세요"
-          style={styles.search}
-        />
-      </View>
       <View style={styles.fillterButton}>
-        <Text style={styles.fillterButtonText}>#구독중</Text>
-        <Text style={styles.fillterButtonText}>#종료 7일전</Text>
-        <Text style={styles.fillterButtonText}>#구독 만료</Text>
-        <Text
-          style={{
-            ...styles.fillterButtonText,
-            backgroundColor: "red",
-            color: "#fff",
-          }}
-        >
-          #구독 취소
-        </Text>
-        <Text
-          style={{
-            ...styles.fillterButtonText,
-            backgroundColor: "red",
-            color: "#fff",
-          }}
-        >
-          #취소 진행중
-        </Text>
+        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></View>
+        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#종료 7일전</Text></View>
+        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></View>
       </View>
       <ScrollView>
-        {orderList.map((order, index) => (
+        {PaymentData.map((order, index) => (
           <TouchableOpacity key={index} style={styles.orderView}>
             <View style={styles.orderBox}>
-              <TouchableOpacity 
-              onPress={() => navigation.navigate("Chat", {room: order.room, name: order.name, image: order.image, user})}
-              style={styles.chatButton}>
-                <Text style={styles.chatButtonText}>{themeIcon.chatIcon} 상담</Text>
-              </TouchableOpacity>
-              <Image source={order.image} style={styles.orderImage} />
+              <Image source={{ uri: order.image }} style={styles.orderImage} />
               <View style={styles.orderInfo}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
                   style={styles.orderTitle}
                 >
-                  {order.name}
+                  {order.product_group_name}
                 </Text>
-                <Text style={styles.orderDate}>{order.date}</Text>
-                <Text style={styles.orderPrice}>{order.price}</Text>
-                <View
-                  style={{
-                    ...styles.orderStatus,
-                    backgroundColor:
-                      order.orderStatus === "구독중"
-                        ? "#00BFA6"
-                        : order.orderStatus === "구독만료"
-                        ? "#FFC107"
-                        : "#FF5252",
-                  }}
-                >
-                  <Text style={styles.orderStatusText}>
-                    {order.orderStatus}
-                  </Text>
-                </View>
+                <Text style={styles.orderDate}>{order.product_name}</Text>
+                <Text style={styles.orderPrice}>{order.price.toLocaleString()}원</Text>
+                <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
               </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name })}
+                style={styles.chatButton}>
+                <Text style={styles.chatButtonText}>문의</Text>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         ))}
@@ -157,7 +78,8 @@ export default function Mypage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.bgColor,
-    marginBottom: 200,
+    marginTop: 10,
+    flex: 1,
   },
   searchBox: {
     paddingHorizontal: 10,
@@ -173,21 +95,24 @@ const styles = StyleSheet.create({
   },
   fillterButton: {
     flexDirection: "row",
-    flexWrap: "wrap",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
     marginBottom: 10,
+    alignItems: "space-between",
+  },
+  fillterButtonBox: {
+    flex: 1,
+    borderRadius: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
   },
   fillterButtonText: {
     fontWeight: "600",
-    backgroundColor: "yellow",
     paddingHorizontal: 10,
-    paddingVertical: 7,
     fontSize: 12,
     color: "#333",
-    marginRight: 10,
-    marginBottom: 10,
     letterSpacing: 2,
+    textAlign: "center",
   },
   orderView: {
     // paddingHorizontal: 10,
@@ -199,63 +124,61 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row",
     // alignItems: "center",
-    },
+  },
   chatButton: {
-    position: "absolute",
-    // backgroundColor: "skyblue",
-    paddingVertical: 5,
+    justifyContent: "center",
+    backgroundColor: "yellow",
     paddingHorizontal: 10,
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderRadius: 5,
-    marginRight: 10,
-    bottom: 5,
-    right: 0,
-    zIndex: 1,
+    borderRadius: 20,
   },
   chatButtonText: {
     color: "#000",
     fontSize: 14,
+    fontWeight: "600",
   },
-    orderImage: {
-        //box size width
-        width: theme.deviceWidth * 0.2,
-        height: theme.deviceWidth * 0.2,
-        borderColor: "#eee",
-        borderWidth: 1,
-    },
-    orderTitle: {
-        fontSize: 19,
-        fontWeight: "600",
-        color: "#333",
-    },
-    orderDate: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#333",
-        marginTop: 5,
-    },
-    orderPrice: {
-        fontSize: 17,
-        fontWeight: "600",
-        color: "red",
-        marginTop: 10,
-    },
-    orderStatus: {
-        backgroundColor: "yellow",
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 10,
-        marginTop: 15,
-    },
-    orderStatusText: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#fff",
-    },
-    orderInfo: {
-        flex: 1,
-        alignItems: "flex-start",
-        marginLeft: 20,
-    },
+  orderImage: {
+    width: theme.deviceWidth * 0.2,
+    height: theme.deviceWidth * 0.2,
+    borderColor: "#eee",
+    borderWidth: 1,
+  },
+  orderTitle: {
+    fontSize: 19,
+    fontWeight: "600",
+    color: "#333",
+  },
+  orderDate: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+    marginTop: 5,
+  },
+  orderPrice: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "red",
+    marginTop: 10,
+  },
+  orderStatus: {
+    backgroundColor: "#00BFA6",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginTop: 15,
+  },
+  orderStatusText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  orderInfo: {
+    flex: 1,
+    alignItems: "flex-start",
+    marginLeft: 20,
+  },
+  orderperiod: {
+    fontSize: 12,
+    color: "#cacaca",
+    marginTop: 5,
+  },
 });

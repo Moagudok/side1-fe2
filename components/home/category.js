@@ -30,8 +30,6 @@ export default function Category({ navigation }) {
       width: theme.deviceWidth / 6,
       height: theme.deviceWidth / 6,
       borderRadius: theme.deviceWidth / 12,
-      borderColor: "#fff",
-      borderWidth: 3,
     },
     categoryText: {
       fontSize: 12,

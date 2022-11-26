@@ -11,42 +11,52 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { theme, backendServer } from "./theme";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-export default function LoginPage({ navigation }) {
+export default function JoinPage({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [incorrect, setIncorrect] = useState(false);
+  const [password2, setPassword2] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [incorrect, setincorrect] = useState(false);
+  const [incorrectMsg, setincorrectMsg] = useState("");
   const login = useSelector((state) => state.login);
 
-  const dispatch = useDispatch();
-
-  const loginButton = async () => {
+  const joinButton = async () => {
     const user = {
-      email: email,
-      password: password,
+      email,
+      password,
+      name,
+      address,
       is_seller: 0,
     };
-    try {
-      const res = await axios.post(
-        `${backendServer.login}`,
-        user
-      );
-      await AsyncStorage.setItem("refresh", res.data.refresh);
-      await AsyncStorage.setItem("access", res.data.access);
-      dispatch({
-        type: "SET_LOGIN",
-        login: true,
-      });
-    } catch (err) {
-      setIncorrect(true);
+    if (password !== password2) {
+      setincorrect(true);
+      setincorrectMsg("비밀번호가 일치하지 않습니다.");
       Vibration.vibrate(Platform.OS === "ios" ? 0 : 1000);
       setTimeout(() => {
-        setIncorrect(false);
+        setincorrect(false);
       }, 1000);
+    } else {
+      try {
+        const res = await axios.post(`${backendServer.join}`, user);
+        console.log(res.data)
+        navigation.replace("JoinComplete");
+      } catch (e) {
+        console.error(e.response.data)
+        e.response.data.address && setincorrectMsg(e.response.data.address);
+        e.response.data.email && setincorrectMsg(e.response.data.email);
+        e.response.data.password && setincorrectMsg(e.response.data.password);
+        setincorrect(true);
+        Vibration.vibrate(Platform.OS === "ios" ? 0 : 1000);
+        setTimeout(() => {
+          setincorrect(false);
+        }, 1000);
+      }
     }
   };
+
 
   useEffect(() => {
     login ? navigation.goBack() : null;
@@ -62,8 +72,8 @@ export default function LoginPage({ navigation }) {
       alignItems: "center",
     },
     styleImage: {
-      width: theme.deviceWidth * 0.5,
-      height: theme.deviceWidth * 0.5,
+      width: theme.deviceWidth * 0.2,
+      height: theme.deviceWidth * 0.2,
       marginBottom: 20,
     },
     loginTitle: {
@@ -124,7 +134,7 @@ export default function LoginPage({ navigation }) {
         />
       </View>
       <View style={styles.loginInputBox}>
-        <Text style={styles.loginTitle}>회원 로그인</Text>
+        <Text style={styles.loginTitle}>회원 가입</Text>
         <TextInput
           placeholder="아이디 혹은 이메일"
           value={email}
@@ -132,27 +142,48 @@ export default function LoginPage({ navigation }) {
           style={styles.loginInput}
         />
         <TextInput
+          placeholder="성함"
+          value={name}
+          onChangeText={(text) => setName(text)}
+          style={styles.loginInput}
+        />
+        <TextInput
+          placeholder="주소"
+          value={address}
+          onChangeText={(text) => setAddress(text)}
+          style={styles.loginInput}
+        />
+        <TextInput
           placeholder="비밀번호"
-          onSubmitEditing={loginButton}
+          onSubmitEditing={joinButton}
           returnKeyType="send"
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
           style={styles.loginInput}
         />
+        <TextInput
+          placeholder="비밀번호 확인"
+          onSubmitEditing={joinButton}
+          returnKeyType="send"
+          value={password2}
+          onChangeText={(text) => setPassword2(text)}
+          secureTextEntry={true}
+          style={styles.loginInput}
+        />
       </View>
-      <TouchableOpacity onPress={loginButton} style={styles.loginButton}>
-        <Text style={{ color: "#fff" }}>로그인</Text>
+      <TouchableOpacity onPress={joinButton} style={styles.loginButton}>
+        <Text style={{ color: "#fff" }}>회원가입</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        on onPress={() => navigation.replace("JoinPage")}
+        onPress={() => navigation.replace("LoginPage")}
       >
-        <Text style={styles.loginJoinTile}>아직도 회원이 아니신가요? 회원가입</Text>
+        <Text style={styles.loginJoinTile}>이미 회원이신가요? 로그인</Text>
       </TouchableOpacity>
       {incorrect ? (
         <View style={styles.incorrect}>
           <Text style={styles.incorrectText}>
-            아이디 혹은 비밀번호가 맞지 않습니다.
+            {incorrectMsg}
           </Text>
         </View>
       ) : null}

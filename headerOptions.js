@@ -12,6 +12,5 @@ export const headerOption = (title) => {
       headerTitleStyle: {
         fontWeight: "bold",
       },
-      headerTitleAlign: "center",
     };
   };

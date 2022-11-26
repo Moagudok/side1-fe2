@@ -30,16 +30,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  // itemImageBox: {
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2,
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 3.84,
-  //   elevation: 5,
-  // },
   itemImage: {
     width: theme.deviceWidth * 0.4,
     height: theme.deviceWidth * 0.4,

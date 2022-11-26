@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { styles } from "./homeScrollitemStyle";
-import { Shadow } from "react-native-shadow-2";
 
 export default function BestItem({ navigation }) {
   const bestItemList = useSelector((state) => state.bestItemList);
@@ -23,9 +22,9 @@ export default function BestItem({ navigation }) {
           >
             <View>
               <View style={styles.itemImageBox}>
-              <Image source={{ uri: item.image }} style={styles.itemImage} />
+                <Image source={{ uri: item.image }} style={styles.itemImage} />
               </View>
-                <Text style={styles.paymentTermText}>주 1회</Text>
+              <Text style={styles.paymentTermText}>주 1회</Text>
               <Text style={styles.itemGroupName}>
                 {item.product_group_name}
               </Text>

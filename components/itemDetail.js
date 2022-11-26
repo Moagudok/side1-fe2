@@ -21,6 +21,8 @@ export default function ItemDetail({ route, navigation }) {
   const [IsLoading, setIsLoading] = useState(true);
   const [cookies, setCookies] = useState(null);
   const dispatch = useDispatch();
+  const paymentData = useSelector((state) => state.paymentData);
+
 
   const getData = async () => {
     const res = await axios.get(`${backendServer.productDetail}${id}`, {
@@ -41,13 +43,13 @@ export default function ItemDetail({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if(!data || !data.id) return;
-      navigation.setOptions({
-        title: `[${data.product_group_name}] ${data.product_name}`,
-        headerTitleAlign: "center",
-        headerTitleStyle: { fontSize: 16, fontWeight: "300" },
-      });  
-  }, [data]);    
+    if (!data || !data.id) return;
+    navigation.setOptions({
+      title: `[${data.product_group_name}] ${data.product_name}`,
+      headerTitleAlign: "center",
+      headerTitleStyle: { fontSize: 16, fontWeight: "300" },
+    });
+  }, [data]);
 
   useEffect(() => {
     dispatch({
@@ -60,25 +62,21 @@ export default function ItemDetail({ route, navigation }) {
         price: data.price,
         image: data.image,
         paymentTerm: data.payment_term,
+        subscriptionDate: new Date().toISOString().slice(0, 10),
+        expirationDate: new Date(new Date().setMonth(new Date().getMonth())).toDateString(),
+        paymentDueDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toDateString()
       },
     });
   }, [data]);
-  
+
   return IsLoading ? (
     <NowLoading />
   ) : (
     <View>
       <ScrollView style={styles.container}>
-        <View style={styles.backButton}>
-          <TouchableOpacity style={{width: 50, height: 50,}}onPress={() => navigation.goBack()}>
-            {themeIcon.backButton}
-          </TouchableOpacity>
-          <View style={styles.viewsBox}>
-            <Text style={styles.views}>조회수 {data.views}</Text>
-          </View>
-        </View>
         <View>
           <Image source={{ uri: data.image }} style={styles.image} />
+          <View style={styles.viewsBox}><Text style={styles.viewsText}>조회수 {data.views}</Text></View>
         </View>
         <View style={styles.productInfo}>
           <View style={styles.subNumBox}>
@@ -94,10 +92,10 @@ export default function ItemDetail({ route, navigation }) {
             {data.price.toLocaleString()}원
           </Text>
           <View style={styles.sellerItem}>
-            <Text style={styles.sellerItemTitle}>판매자 상품</Text>
+            <Text style={styles.sellerItemTitle}>판매자 다른 상품</Text>
             <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
             >
               {sellerItem.map((item, index) => (
                 <TouchableOpacity style={styles.sellerItemBox}
@@ -121,14 +119,14 @@ export default function ItemDetail({ route, navigation }) {
           {!data.productimages
             ? null
             : data.productimages.map((item) => {
-                return (
-                  <Image
-                    source={{ uri: item.image }}
-                    style={styles.detailImage}
-                    key={item.id}
-                  />
-                );
-              })}
+              return (
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.detailImage}
+                  key={item.id}
+                />
+              );
+            })}
         </View>
         <View style={styles.line} />
         <View style={styles.precautions}>
@@ -160,10 +158,16 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   viewsBox: {
+    position: "absolute",
     backgroundColor: "white",
+    top: 10,
+    right: 10,
     padding: 3,
     borderRadius: 5,
     fontWeight: "bold",
+  },
+  viewsText: {
+    fontSize: 12,
   },
   views: {
     color: "gray",
@@ -178,8 +182,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    top: -20,
-    zIndex: 1,
     backgroundColor: "white",
   },
   subNumBox: {
@@ -266,17 +268,6 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     color: theme.fontColor,
   },
-  backButton: {
-    position: "absolute",
-    top: 50,
-    left: 20,
-    zIndex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: theme.deviceWidth - 40,
-    zIndex: 1,
-  },
   backButtonText: {
     fontSize: 16,
     fontWeight: "300",
@@ -291,21 +282,19 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sellerItemTitle: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     color: theme.fontColor,
     marginBottom: 10,
   },
   sellerItemBox: {
-    width: 100,
-    height: 100,
     borderRadius: 10,
     overflow: "hidden",
     marginRight: 10,
   },
   sellerItemImage: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     resizeMode: "cover",
     borderRadius: 10,
   },

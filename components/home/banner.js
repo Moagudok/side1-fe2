@@ -1,23 +1,33 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet } from "react-native";
+// import {
+//   AdMobBanner,
+//   AdMobInterstitial,
+//   PublisherBanner,
+//   AdMobRewarded,
+//   setTestDeviceIDAsync,
+//   TestIds,
+// } from 'expo-ads-admob';
+// import * as Device from 'expo-device';
 import { theme } from "../theme";
+// import { useEffect } from "react";
+// import { useState } from "react";
+
+const styles = StyleSheet.create({
+  adBannerImage: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+});
 
 export default function Banner() {
-  const styles = StyleSheet.create({
-    adBanner: {
-      backgroundColor: "#fff",
-      justifyContent: "center",
-      alignItems: "center",
-      resizeMode: "contain",
-    },
-    adBannerImage: {
-      width: theme.deviceWidth,
-      height: 80,
-    },
-  });
 
   return (
-    <View style={styles.adBanner}>
-      <Image style={styles.adBannerImage} source={theme.homebanerImage} />
-    </View>
+    <Image
+      style={styles.adBannerImage}
+      source={require("../../assets/banner.jpg")}
+    />
   );
 }
+
+

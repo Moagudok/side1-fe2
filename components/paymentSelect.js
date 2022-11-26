@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { payselectList } from "./paymentSelectList";
 
 export const PaymentSelect = ({ navigation }) => {

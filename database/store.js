@@ -1,4 +1,5 @@
 import { bottomLoginFalse, bottomLoginTrue } from "./bottomMenuList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function reducer(state, action) {
   switch (action.type) {
@@ -24,6 +25,8 @@ export function reducer(state, action) {
         bottomMenuList: action.login ? bottomLoginTrue : bottomLoginFalse,
       };
     case "LOGOUT":
+      AsyncStorage.removeItem("refresh");
+      AsyncStorage.removeItem("access");
       return {
         ...state,
         login: false,
@@ -54,6 +57,11 @@ export function reducer(state, action) {
         ...state,
         paymentSelectItem: action.paymentSelectItem,
       };
+    case "SET_USER_INFO":
+      return {
+        ...state,
+        userInfo: action.userInfo,
+      };
     default:
       return {
         ...state,
@@ -65,8 +73,9 @@ export function reducer(state, action) {
         productGetUrl: "",
         newItemList: [],
         bestItemList: [],
-        paymentSelectItem : 1,
+        paymentSelectItem: 1,
         paymentData: null,
+        userInfo: null,
       };
   }
 }

@@ -12,6 +12,8 @@ export function KaKaoPay({ navigation, route }) {
   }
 
   const paymentData = useSelector((state) => state.paymentData);
+  const userInfo = useSelector((state) => state.userInfo);
+
   const paySelect = route.params.payValue;
 
   /* [필수입력] 결제에 필요한 데이터를 입력합니다. */
@@ -22,11 +24,10 @@ export function KaKaoPay({ navigation, route }) {
     name: paymentData.name, // 주문명
     merchant_uid: `mid_${new Date().getTime()}`,
     amount: paymentData.price, // 결제금액
-    buyer_name: "홍길동",
-    buyer_tel: "01012345678",
-    buyer_email: "example@naver.com",
-    buyer_addr: "서울시 강남구 신사동 661-16",
-    buyer_postcode: "06018",
+    buyer_name: userInfo.name, // 구매자 이름
+    buyer_tel: "010-1234-1234", // 구매자 전화번호
+    buyer_email: userInfo.email,
+    buyer_addr: userInfo.address,
     app_scheme: "example",
     // [Deprecated v1.0.3]: m_redirect_url
   };

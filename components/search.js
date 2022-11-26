@@ -7,7 +7,9 @@ import {
 } from "react-native";
 import { theme, themeIcon, backendServer } from "./theme";
 import { useEffect, useState } from "react";
+import { refresh } from "./refresh";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Search({ navigation }) {
   const [recentlySearchList, setRecentlySearchList] = useState([]);
@@ -15,16 +17,44 @@ export default function Search({ navigation }) {
   const [searchText, setSearchText] = useState("");
 
   const recentlySearchGet = async () => {
-    const res = await axios.get(backendServer.lastSearch);
-    const searchData = JSON.parse(res.data);
-    console.log(searchData);
-    setRecentlySearchList(searchData);
+    const refreshToken = await AsyncStorage.getItem("refresh");
+    const access = await refresh(refreshToken);
+    const auth = {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      }
+    }
+    try {
+      const res = await axios.get(backendServer.lastSearch, auth);
+      const searchData = JSON.parse(res.data);
+      setRecentlySearchList(searchData);
+    } catch (e) {
+      console.log("라스트 서치 에러");
+    }
+  };
+
+  const recentSearchSave = async (text) => {
+    const refreshToken = await AsyncStorage.getItem("refresh");
+    const access = await refresh(refreshToken);
+    console.log(access)
+    const body = {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    };
+    const bodyText = {search : text}
+    try {
+      const res = await axios.post(backendServer.lastSearch, bodyText, body);
+    }
+    catch (e) {
+      console.log(e)
+      console.log("라스트 서치 저장 에러");
+    }
   };
 
   const topHitsGet = async () => {
     const res = await axios.get(backendServer.tophitSearch);
     const searchData = JSON.parse(res.data);
-    console.log(searchData);
     setTopHits(searchData);
   };
 
@@ -33,16 +63,9 @@ export default function Search({ navigation }) {
     topHitsGet();
   }, []);
 
-  const recentSearchSave = async () => {
-    const res = await axios.post("http://52.79.143.145:8001/search/latest", {
-      search: searchText,
-    });
-  };
-
   const recentlySearchAdd = (text) => {
-    // setRecentlySearchList([...recentlySearchList, { searchText: text }]);
     setRecentlySearchList([...recentlySearchList, { searchText: text }]);
-    recentSearchSave();
+    recentSearchSave(text);
     setSearchText("");
     navigation.navigate("ProductList", {
       search: "search",
@@ -182,7 +205,7 @@ export default function Search({ navigation }) {
           {themeIcon.lightIcon}
           <Text style={styles.recommendationTitle}>추천 검색어</Text>
         </View>
-          <View style={styles.recommendationList}>
+        <View style={styles.recommendationList}>
           {tophits.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -194,7 +217,7 @@ export default function Search({ navigation }) {
               <Text style={styles.recentlySearchName}>{item._id}</Text>
             </TouchableOpacity>
           ))}
-          </View>
+        </View>
       </View>
     </View>
   );

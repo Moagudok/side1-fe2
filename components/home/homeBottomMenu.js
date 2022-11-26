@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
-export default function HomeBottom( { navigation } ) {
+export default function HomeBottom({ navigation }) {
   const bottomMenuList = useSelector((state) => state.bottomMenuList);
 
   const styles = StyleSheet.create({

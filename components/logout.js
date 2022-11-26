@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, Platform } from "react-native";
 
 export const Logout = () => {
   const dispatch = useDispatch();
@@ -7,8 +7,9 @@ export const Logout = () => {
     dispatch({ type: "LOGOUT" });
   };
   return (
-    <TouchableOpacity onPress={logout}>
-      <Text>로그아웃</Text>
+    <TouchableOpacity
+    onPress={logout}>
+      <Text style={{ color: "white" }}>로그아웃</Text>
     </TouchableOpacity>
   );
 };

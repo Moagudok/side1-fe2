@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  ScrollView,
+  ImageBackground,
 } from "react-native";
 import { theme } from "./theme";
 import { useSelector } from "react-redux";
@@ -15,14 +15,10 @@ export default function Category({ navigation }) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#fff",
     },
     categoryList: {
-      flex: 1,
-      backgroundColor: "#fff",
       flexDirection: "row",
       flexWrap: "wrap",
-      justifyContent: "space-between",
       paddingVertical: 10,
     },
     categoryItem: {
@@ -36,17 +32,23 @@ export default function Category({ navigation }) {
       height: theme.deviceWidth / 3 - 20,
       borderRadius: theme.deviceWidth / 6 - 10,
       borderColor: "#fff",
-      borderWidth: 3,
+      borderWidth: 2,
     },
     categoryText: {
       fontSize: 12,
       marginTop: 10,
     },
+    image: {
+      flex: 1,
+      resizeMode: "cover",
+      justifyContent: "center",
+    },
   });
 
   return (
+    <ImageBackground source={{ uri: "https://t1.daumcdn.net/cfile/tistory/99B0703359F035FB15" }} style={styles.image}>
+
     <View style={styles.container}>
-      <ScrollView>
         <View style={styles.categoryList}>
           {categoryList.map((item, index) => {
             return (
@@ -70,7 +72,8 @@ export default function Category({ navigation }) {
             );
           })}
         </View>
-      </ScrollView>
     </View>
+    </ImageBackground>
+
   );
 }

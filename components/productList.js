@@ -32,6 +32,7 @@ export default memo(function ProductList({ navigation, route }) {
     const data = res.data;
     totalPage.current = Math.ceil(data.count / limit);
     setProductLists([...productLists, ...data.results]);
+    console.log(data)
     setIsLoading(false);
   };
 
@@ -55,7 +56,9 @@ export default memo(function ProductList({ navigation, route }) {
         }}
       >
         <View style={styles.productImageBox}>
-          <View
+          <Image style={styles.productImage} source={{ uri: item.image }} />
+        </View>
+        <View
             style={{
               ...styles.productTerm,
               backgroundColor: paymentTermColor[item.payment_term],
@@ -63,8 +66,7 @@ export default memo(function ProductList({ navigation, route }) {
           >
             <Text style={styles.productTermText}>{item.payment_term} 1회</Text>
           </View>
-          <Image style={styles.productImage} source={{ uri: item.image }} />
-        </View>
+        <Text style={styles.productGroupName}>{item.subtitle}</Text>
         <Text style={styles.productGroupName}>{item.product_group_name}</Text>
         <Text style={styles.productName}>{item.product_name}</Text>
         <Text style={styles.productPrice}>{item.price.toLocaleString()}원</Text>
@@ -104,17 +106,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   productTerm: {
-    position: "absolute",
-    top: -3,
-    right: 5,
+    // position: "absolute",
+    marginBottom: 10,
+    marginHorizontal: 10,
     backgroundColor: theme.mainColor,
     borderRadius: 5,
     padding: 5,
-    zIndex: 1,
   },
   productTermText: {
+    textAlign: "center",
     color: "#F7F7F7",
-    fontSize: 12,
+    fontSize: 14,
   },
   productImage: {
     width: theme.deviceWidth / 2 - 20,
@@ -140,7 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
     color: "#333",
-    marginTop: 5,
     marginBottom: 20,
     textAlign: "center",
     color: theme.primaryColor,
