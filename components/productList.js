@@ -32,7 +32,6 @@ export default memo(function ProductList({ navigation, route }) {
     const data = res.data;
     totalPage.current = Math.ceil(data.count / limit);
     setProductLists([...productLists, ...data.results]);
-    console.log(data)
     setIsLoading(false);
   };
 
