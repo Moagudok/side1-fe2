@@ -49,7 +49,7 @@ export default function Mypage({ navigation }) {
         <View style={styles.fillterButton}>
           <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { setSubUrl("7ago") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#7일전</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 구독</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 만료</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { setSubUrl("exp") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></TouchableOpacity>
         </View>
         <ScrollView>

@@ -40,9 +40,11 @@ export default function ItemDetail({ route, navigation }) {
 
   useEffect(() => {
     getData();
-    const check = userInfo.sub_product.includes(id);
-    if (check) {
-      setSub(true);
+    if (login) {
+      const check = userInfo.sub_product.includes(id)
+      if (check) {
+        setSub(true);
+      }
     }
   }, []);
 

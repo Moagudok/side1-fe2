@@ -1,11 +1,11 @@
 import { Dimensions } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const backSrv = "http://52.79.143.145:8001";
-const backSrv2 = "http://52.79.143.145:8000";
-const backSrv3 = "http://52.79.143.145:8003";
-const backSrv4 = "http://52.79.143.145:8004";
-const backSrv5 = "http://52.79.143.145:8080";
+const backSrv = "http://54.180.145.47:8001";
+const backSrv2 = "http://54.180.145.47:8000";
+const backSrv3 = "http://54.180.145.47:8003";
+const backSrv4 = "http://54.180.145.47:8004";
+const backSrv5 = "http://54.180.145.47:8080";
 
 export const theme = {
   bgColor: '#F7F7F7',
@@ -30,7 +30,7 @@ export const stackStyle = {
   bg: "#fff",
   color: "#000",
 };
-//http://52.79.143.145:8001/consumer/mypage?type=exp
+//http://54.180.145.47:8001/consumer/mypage?type=exp
 
 export const backendServer = {
   category: `${backSrv}/consumer/product/category/`,
@@ -47,14 +47,14 @@ export const backendServer = {
   payment: `${backSrv5}/payment`,
 };
 
-// http://52.79.143.145:8001/consumer/product/cursor/list?category=1&search&cursor
+// http://54.180.145.47:8001/consumer/product/cursor/list?category=1&search&cursor
 
-// http://52.79.143.145:8001/consumer/product/list?category=1&search&page=1
+// http://54.180.145.47:8001/consumer/product/list?category=1&search&page=1
 
-// http://52.79.143.145:8001/consumer/home/
+// http://54.180.145.47:8001/consumer/home/
 
-// http://52.79.143.145:8001/consumer/product/detail/14
+// http://54.180.145.47:8001/consumer/product/detail/14
 
-// http://52.79.143.145:8001/user/join
+// http://54.180.145.47:8001/user/join
 
-// http://52.79.143.145:8003/search/latest
+// http://54.180.145.47:8003/search/latest

@@ -9,7 +9,7 @@ export const Logout = () => {
   return (
     <TouchableOpacity
     onPress={logout}>
-      <Text style={{ color: "white" }}>로그아웃</Text>
+      <Text style={{ color: "#000" }}>로그아웃</Text>
     </TouchableOpacity>
   );
 };

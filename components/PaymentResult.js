@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { theme, backendServer } from './theme';
 import { useSelector } from 'react-redux';
+import { refresh } from './refresh';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PaymentResult = ({ route, navigation }) => {
   const userInfo = useSelector((state) => state.userInfo);
@@ -14,20 +16,30 @@ export const PaymentResult = ({ route, navigation }) => {
 
   const paymentSave = async () => {
     if (imp_success === "true") {
+      // const refreshToken = await AsyncStorage.getItem("refresh");
+      const refreshToken = await AsyncStorage.getItem("refresh");
+      const accessToken = await refresh(refreshToken);
+      const auth = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
       const body = {
         productId: paymentData.id,
         price: paymentData.price,
         subscriptionDate: dateNow,
         expirationDate: dateNext,
         paymentDueDate: dateNext,
-        consumerId: userInfo.id,
+        // consumerId: userInfo.id,
         sellerId: 1,
       };
+      console.log(body)
+      console.log(accessToken)
       try {
-        console.log(body);
-        const res = await axios.post(`${backendServer.payment}`, body)
+        const res = await axios.post(`${backendServer.payment}`, body, auth)
+        // consoloe.log("res", res.data);
       } catch (e) {
-        console.log(e);
+        // console.log("error", e.response);
       }
     }
   };
