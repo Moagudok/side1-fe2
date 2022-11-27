@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { theme, themeIcon, backendServer } from "./theme";
 import { useSelector } from "react-redux";
 import { refresh } from "./refresh";
+import { NowLoading } from "./nowLoading";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -11,8 +12,10 @@ export default function Mypage({ navigation }) {
   const userInfo = useSelector((state) => state.userInfo);
   const [PaymentData, setPaymentData] = useState([]);
   const [subUrl, setSubUrl] = useState("sub");
+  const [loading, setLoading] = useState(false);
 
   const GetPaymentData = async () => {
+    setLoading(true);
     const refreshToken = await AsyncStorage.getItem("refresh");
     const accessToken = await refresh(refreshToken);
     const auth = {
@@ -20,14 +23,17 @@ export default function Mypage({ navigation }) {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    try {
-      const res = await axios.get(`${backendServer.paymentData}${subUrl}`, auth);
-      setPaymentData(res.data)
-    } catch (e) {
-      console.log(e);
+    if (accessToken) {
+      try {
+        const res = await axios.get(`${backendServer.paymentData}${subUrl}`, auth);
+        setPaymentData(res.data)
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
+      }
     }
   };
-
 
   useEffect(() => {
     !login ? navigation.navigate("Home") : null;
@@ -38,40 +44,41 @@ export default function Mypage({ navigation }) {
   }, [subUrl]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.fillterButton}>
-        <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => { setSubUrl("7ago") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#7일전</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 구독</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => { setSubUrl("exp") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></TouchableOpacity>
-      </View>
-      <ScrollView>
-        {PaymentData.map((order, index) => (
-          <TouchableOpacity key={index} style={styles.orderView}>
-            <View style={styles.orderBox}>
-              <Image source={{ uri: order.image }} style={styles.orderImage} />
-              <View style={styles.orderInfo}>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.orderTitle}
-                >
-                  {order.product_group_name}
-                </Text>
-                <Text style={styles.orderDate}>{order.product_name}</Text>
-                <Text style={styles.orderPrice}>{order.price.toLocaleString()}원</Text>
-                <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
+    loading ? <NowLoading /> :
+      <View style={styles.container}>
+        <View style={styles.fillterButton}>
+          <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSubUrl("7ago") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#7일전</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 구독</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSubUrl("exp") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></TouchableOpacity>
+        </View>
+        <ScrollView>
+          {PaymentData.map((order, index) => (
+            <TouchableOpacity key={index} style={styles.orderView}>
+              <View style={styles.orderBox}>
+                <Image source={{ uri: order.image }} style={styles.orderImage} />
+                <View style={styles.orderInfo}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.orderTitle}
+                  >
+                    {order.product_group_name}
+                  </Text>
+                  <Text style={styles.orderDate}>{order.product_name}</Text>
+                  <Text style={styles.orderPrice}>{order.price.toLocaleString()}원</Text>
+                  <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name })}
+                  style={styles.chatButton}>
+                  <Text style={styles.chatButtonText}>문의</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name })}
-                style={styles.chatButton}>
-                <Text style={styles.chatButtonText}>문의</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
   );
 }
 

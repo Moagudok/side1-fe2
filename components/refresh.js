@@ -9,6 +9,8 @@ export const refresh = async (refresh) => {
         const res = await axios.post(backendServer.refreshTokenApi, refreshToken);
         return res.data.access;
     } catch (e) {
+        //retry
+        console.log(e.response);
         console.log("리프레시 토큰 에러");
     }
 }
