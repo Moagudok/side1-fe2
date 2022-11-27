@@ -7,25 +7,28 @@ import axios from 'axios';
 export const PaymentResult = ({ route, navigation }) => {
   const userInfo = useSelector((state) => state.userInfo);
   const paymentData = useSelector((state) => state.paymentData);
+  const dateNow = useSelector((state) => state.dateNow);
+  const dateNext = useSelector((state) => state.dateNext);
   const imp_success = route.params.imp_success;
   const error_msg = route.params.error_msg;
 
   const paymentSave = async () => {
-    if(imp_success === "true") {
+    if (imp_success === "true") {
       const body = {
         productId: paymentData.id,
         price: paymentData.price,
-        subscriptionDate: new Date().toISOString().slice(0, 10),
-        expirationDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().slice(0, 10),
-        paymentDueDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().slice(0, 10),
+        subscriptionDate: dateNow,
+        expirationDate: dateNext,
+        paymentDueDate: dateNext,
         consumerId: userInfo.id,
         sellerId: 1,
       };
-      try{
-      const res = await axios.post(`${backendServer.payment}`, body)
-    } catch (e) {
-      console.log(e);
-    }
+      try {
+        console.log(body);
+        const res = await axios.post(`${backendServer.payment}`, body)
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

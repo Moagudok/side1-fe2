@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment-timezone";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SplashScreen from "expo-splash-screen";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -32,6 +33,14 @@ export default function Home({ navigation }) {
     dispatch({ type: "SET_NEW_ITEM_LIST", list: data.new_products });
   };
 
+  const getCurrentTime = () => {
+    const nowTime = moment().tz("Asia/Seoul");
+    // nowTime + 1month
+    const nextTime = moment().tz("Asia/Seoul").add(1, "month");
+    dispatch({ type: "GET_DATE_NOW", dateNow: nowTime.format("YYYY-MM-DD") });
+    dispatch({ type: "GET_DATE_NEXT", dateNext: nextTime.format("YYYY-MM-DD") });
+  };
+
   const getRefreshToken = async () => {
     try {
       const refreshToken = await AsyncStorage.getItem("refresh");
@@ -58,6 +67,7 @@ export default function Home({ navigation }) {
     getRefreshToken();
     setIsLoading(false);
     getUserInfo();
+    getCurrentTime();
   }, []);
 
   const styles = StyleSheet.create({

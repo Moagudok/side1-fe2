@@ -10,7 +10,7 @@ export default function Mypage({ navigation }) {
   const login = useSelector((state) => state.login);
   const userInfo = useSelector((state) => state.userInfo);
   const [PaymentData, setPaymentData] = useState([]);
-  const [user, setUser] = useState(null);
+  const [subUrl, setSubUrl] = useState("sub");
 
   const GetPaymentData = async () => {
     const refreshToken = await AsyncStorage.getItem("refresh");
@@ -21,7 +21,7 @@ export default function Mypage({ navigation }) {
       },
     };
     try {
-      const res = await axios.get(backendServer.paymentData, auth);
+      const res = await axios.get(`${backendServer.paymentData}${subUrl}`, auth);
       setPaymentData(res.data)
     } catch (e) {
       console.log(e);
@@ -34,16 +34,16 @@ export default function Mypage({ navigation }) {
   }, [login]);
 
   useEffect(() => {
-    setUser("user" + Math.floor(Math.random() * 1000));
     GetPaymentData();
-  }, []);
+  }, [subUrl]);
 
   return (
     <View style={styles.container}>
       <View style={styles.fillterButton}>
-        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></View>
-        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#종료 7일전</Text></View>
-        <View style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></View>
+        <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => { setSubUrl("7ago") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FFC107" }}><Text style={styles.fillterButtonText}>#7일전</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 구독</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => { setSubUrl("exp") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></TouchableOpacity>
       </View>
       <ScrollView>
         {PaymentData.map((order, index) => (
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   fillterButtonText: {
     fontWeight: "600",
     paddingHorizontal: 10,
-    fontSize: 12,
+    fontSize: 10,
     color: "#333",
     letterSpacing: 2,
     textAlign: "center",

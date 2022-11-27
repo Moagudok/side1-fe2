@@ -15,16 +15,12 @@ import Postcode from '@actbase/react-daum-postcode';
 export default function Payments({ navigation, route }) {
   const paymentSelectItem = useSelector((state) => state.paymentSelectItem);
   const paymentData = useSelector((state) => state.paymentData);
+  const dateNow = useSelector((state) => state.dateNow);
+  const dateNext = useSelector((state) => state.dateNext);
   const userInfo = useSelector((state) => state.userInfo);
   const [addressInput, setAddressInput] = useState(false);
   const [address, setAddress] = useState(userInfo.address);
   const dispatch = useDispatch();
-  const [subscriptionPeriod, setSubscriptionPeriod] = useState({
-    start: new Date().toISOString().slice(0, 10),
-    end: new Date(new Date().setMonth(new Date().getMonth() + 1))
-      .toISOString()
-      .slice(0, 10),
-  });
 
   const postInputBox = () => (
     <Postcode
@@ -111,7 +107,7 @@ export default function Payments({ navigation, route }) {
           <TextInput style={styles.paymentinfoInput} placeholder="상세 주소" />
         </View>
         <Text style={styles.subscriptionPeriod}>
-          구독기간 : {subscriptionPeriod.start} ~ {subscriptionPeriod.end}
+          구독기간 : {dateNow} ~ {dateNext}
         </Text>
         <Text style={styles.conditions}>
           위 주문 내용을 확인 하였으며, 구독에 동의합니다. 회원 본인은 개인정보

@@ -41,7 +41,7 @@ export const backendServer = {
   join: `${backSrv2}/user/join`,
   refreshTokenApi: `${backSrv2}/user/token/refresh`,
   user: `${backSrv2}/user`,
-  paymentData: `${backSrv}/consumer/mypage?type=sub`,
+  paymentData: `${backSrv}/consumer/mypage?type=`,
   payment: `${backSrv5}/payment`,
 };
 
@@ -51,7 +51,7 @@ export const backendServer = {
 
 // http://52.79.143.145:8001/consumer/home/
 
-// http://52.79.143.145:8001/consumer/product/detail/1
+// http://52.79.143.145:8001/consumer/product/detail/14
 
 // http://52.79.143.145:8001/user/join
 

@@ -42,6 +42,11 @@
         "foregroundImage": "./assets/icon10.png",
         "backgroundColor": "#FFFFFF"
       },
+      "splash" : {
+        "image" : "./assets/splash.png",
+        "resizeMode" : "contain",
+        "backgroundColor" : "#FFFFFF"
+      },
       "package": "com.leeminki.submarkettest"
     },
     "web": {

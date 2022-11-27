@@ -62,6 +62,16 @@ export function reducer(state, action) {
         ...state,
         userInfo: action.userInfo,
       };
+    case "GET_DATE_NOW":
+      return {
+        ...state,
+        dateNow: action.dateNow,
+      };
+    case "GET_DATE_NEXT":
+      return {
+        ...state,
+        dateNext: action.dateNext,
+      };
     default:
       return {
         ...state,
@@ -76,6 +86,8 @@ export function reducer(state, action) {
         paymentSelectItem: 1,
         paymentData: null,
         userInfo: null,
+        dateNow: null,
+        dateNext: null,
       };
   }
 }

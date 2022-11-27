@@ -16,13 +16,10 @@ export default function Chat({ navigation, route }) {
   const { name, image, room, user, userName } = route.params;
   const [message, setMessage] = useState("");
   const socket = useSelector((state) => state.socket);
-  const [userList, setUserList] = useState();
-  const [pageLoad, setPageLoad] = useState();
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
   const chatDataIp = `http://52.79.183.13:8008/chatList/?room=${room}`;
   const chatSocketIp = `http://52.79.183.13:8008/chat`
-  const userInfo = useSelector((state) => state.userInfo);
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
@@ -51,7 +48,6 @@ export default function Chat({ navigation, route }) {
 
   useEffect(() => {
     chatdataGet();
-    setPageLoad(true);
   }, []);
 
   useEffect(() => {
@@ -121,7 +117,7 @@ export default function Chat({ navigation, route }) {
           marginBottom: 10,
         }}
       >
-        <Image style={{ width: 70, height: 70 }} source={image} />
+        <Image style={{ width: 70, height: 70 }} source={{ uri : image }} />
         <Text
           style={{
             fontSize: 20,
