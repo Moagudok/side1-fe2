@@ -13,13 +13,13 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 export default function Chat({ navigation, route }) {
-  const { name, image, room, user, userName } = route.params;
+  const { name, image, room, user, userName, seller } = route.params;
   const [message, setMessage] = useState("");
   const socket = useSelector((state) => state.socket);
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
-  const chatDataIp = `http://52.79.183.13:8008/chatList/?room=${room}`;
-  const chatSocketIp = `http://52.79.183.13:8008/chat`
+  const chatDataIp = `http://localhost:8008/chatList/?room=${room}`;
+  const chatSocketIp = `http://localhost:8008/chat`
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
@@ -97,7 +97,7 @@ export default function Chat({ navigation, route }) {
 
   const sendMessage = () => {
     if (message) {
-      socket.emit("chat message", room, user, userName, message);
+      socket.emit("chat message", room, user, userName, message, seller);
       setMessage("");
       dispatch({
         type: "ADD_CHAT_MESSAGE",

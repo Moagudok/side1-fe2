@@ -9,12 +9,14 @@ export default function HomeBottom({ navigation }) {
     bottomMenu: {
       position: "absolute",
       bottom: 0,
-      backgroundColor: "#EFEFEF",
+      backgroundColor: "#fff",
       flexDirection: "row",
       justifyContent: "space-around",
       alignItems: "center",
       paddingVertical: 10,
       paddingHorizontal: 10,
+      borderTopWidth: 1,
+      borderTopColor: "#eee",
     },
     bottomMenuItem: {
       flex: 1,

@@ -5,8 +5,9 @@ export const headerOption = (title) => {
       title: title,
       headerBackTitleVisible: false,
       headerBackButtonMenuEnabled: true,
+      headerShadowVisible: false,
       headerStyle: {
-        backgroundColor: stackStyle.bg,
+        backgroundColor: stackStyle.bg,    
       },
       headerTintColor: stackStyle.color,
       headerTitleStyle: {

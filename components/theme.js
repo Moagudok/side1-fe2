@@ -9,6 +9,7 @@ const backSrv5 = "http://52.79.143.145:8080";
 
 export const theme = {
   bgColor: '#F7F7F7',
+  bgColor: '#fff',
   primaryColor: 'red',
   deviceWidth: Dimensions.get('window').width,
   mainColor: '#FF6F61',
@@ -26,7 +27,8 @@ export const themeIcon = {
 
 export const stackStyle = {
   bg: "#000000",
-  color: "#fff",
+  bg: "#fff",
+  color: "#000",
 };
 //http://52.79.143.145:8001/consumer/mypage?type=exp
 
