@@ -18,8 +18,8 @@ export default function Chat({ navigation, route }) {
   const socket = useSelector((state) => state.socket);
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
-  const chatDataIp = `http://localhost:8008/chatList/?room=${room}`;
-  const chatSocketIp = `http://localhost:8008/chat`
+  const chatDataIp = `http://52.79.183.13:8008/chatList/?room=${room}`;
+  const chatSocketIp = `http://52.79.183.13:8008/chat`
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 
