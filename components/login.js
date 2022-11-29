@@ -49,7 +49,7 @@ export default function LoginPage({ navigation }) {
   };
 
   useEffect(() => {
-    login ? navigation.goBack() : null;
+    login ? navigation.navigate("Home") : null;
   }, [login]);
 
   const styles = StyleSheet.create({

@@ -24,7 +24,7 @@ export default function BestItem({ navigation }) {
               <View style={styles.itemImageBox}>
                 <Image source={{ uri: item.image }} style={styles.itemImage} />
               </View>
-              <Text style={styles.paymentTermText}>주 1회</Text>
+              <Text style={styles.paymentTermText}>{item.payment_term} 1회</Text>
               <Text style={styles.itemGroupName}>
                 {item.product_group_name}
               </Text>

@@ -10,6 +10,7 @@ import { theme, themeIcon, backendServer } from "./theme";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { NowLoading } from "./nowLoading";
+import { UserInfo } from "./home/userInfo";
 import axios from "axios";
 import Cookies from 'universal-cookie';
 
@@ -38,7 +39,16 @@ export default function ItemDetail({ route, navigation }) {
     setIsLoading(false);
   };
 
+  const userInfoGet = async () => {
+    if(login){
+      const res = await UserInfo();
+      dispatch({ type: "SET_USER_INFO", userInfo: res });
+    }
+  };
+
+
   useEffect(() => {
+    userInfoGet();
     getData();
     if (login) {
       const check = userInfo.sub_product.includes(id)
@@ -93,7 +103,7 @@ export default function ItemDetail({ route, navigation }) {
           <Text style={styles.sellerName}>{data.seller}</Text>
           <Text style={styles.productGroupName}>{data.product_group_name}</Text>
           <Text style={styles.productName}>{data.product_name}</Text>
-          <Text style={styles.productTerm}>{data.payment_term} 1회 배송</Text>
+          <Text style={styles.productTerm}>{data.payment_term} 1회</Text>
           <Text style={styles.productPrice}>
             {data.price.toLocaleString()}원
           </Text>
@@ -114,6 +124,7 @@ export default function ItemDetail({ route, navigation }) {
                     source={{ uri: item.image }}
                     style={styles.sellerItemImage}
                   />
+                  <Text style={{ marginTop : 10, color: "gray"}}>{item.product_name}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>

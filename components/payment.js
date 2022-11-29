@@ -12,7 +12,7 @@ import { styles } from "./paymentStyle";
 import { payselectList } from "./paymentSelectList";
 import Postcode from '@actbase/react-daum-postcode';
 
-export default function Payments({ navigation, route }) {
+export default function Payments({ navigation }) {
   const paymentSelectItem = useSelector((state) => state.paymentSelectItem);
   const paymentData = useSelector((state) => state.paymentData);
   const dateNow = useSelector((state) => state.dateNow);
@@ -97,13 +97,19 @@ export default function Payments({ navigation, route }) {
             style={styles.paymentinfoInput}
             placeholder="배송 받으실 분 이메일을 입력해주세요."
           />
+          <View>
           <TextInput
-            onFocus={() => setAddressInput(true)}
             value={address}
             onChangeText={text => setAddress(text)}
             style={styles.paymentinfoInput}
             placeholder="배송 받으실 분 주소를 입력해주세요."
           />
+            <TouchableOpacity
+              onPress={() => setAddressInput(true)}
+              style={{ position: "absolute", right: 0, bottom: 20, backgroundColor: "gray", padding: 5, borderRadius: 5 }}>
+              <Text style={{ color: "white" }}>검색</Text>
+            </TouchableOpacity>
+          </View>
           <TextInput style={styles.paymentinfoInput} placeholder="상세 주소" />
         </View>
         <Text style={styles.subscriptionPeriod}>

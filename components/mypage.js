@@ -43,8 +43,20 @@ export default function Mypage({ navigation }) {
     GetPaymentData();
   }, [subUrl]);
 
+  const NotProduct = () => {
+    return (
+      <View style={styles.notProduct}>
+        <Text style={styles.notProductText}>구독중인 상품이 없습니다.</Text>
+        <Text style={styles.notProductText}>상품을 구독해보세요!</Text>
+      </View>
+    );
+  };
+
+
+
   return (
-    loading ? <NowLoading /> :
+    loading ? <NowLoading /> : 
+    PaymentData.length === 0 ? <NotProduct /> :
       <View style={styles.container}>
         <View style={styles.fillterButton}>
           <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
@@ -85,8 +97,8 @@ export default function Mypage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.bgColor,
-    marginTop: 10,
     flex: 1,
+    paddingVertical: 20,
   },
   searchBox: {
     paddingHorizontal: 10,
@@ -102,13 +114,12 @@ const styles = StyleSheet.create({
   },
   fillterButton: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     paddingHorizontal: 5,
     marginBottom: 10,
-    alignItems: "space-between",
   },
   fillterButtonBox: {
-    flex: 1,
     borderRadius: 20,
     paddingVertical: 10,
     marginHorizontal: 5,
@@ -187,5 +198,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#cacaca",
     marginTop: 5,
+  },
+  notProduct: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notProductText: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
   },
 });

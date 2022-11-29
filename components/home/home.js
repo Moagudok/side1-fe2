@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
     dispatch({ type: "SET_CATEGORY_LIST", list: await (await sethomeData()).categories });
     dispatch({ type: "SET_BEST_ITEM_LIST", list: await (await sethomeData()).popular_products });
     dispatch({ type: "SET_NEW_ITEM_LIST", list: await (await sethomeData()).new_products });
-    dispatch({ type: "SET_USER_INFO", userInfo: await UserInfo() });
+    dispatch({ type: "SET_USER_INFO", userInfo: await (await UserInfo()) });
     dispatch({ type: "GET_DATE_NOW", dateNow: getCurrentTime().nowTime.format("YYYY-MM-DD") });
     dispatch({ type: "GET_DATE_NEXT", dateNext: getCurrentTime().nextTime.format("YYYY-MM-DD") });
   };

@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { theme, backendServer } from './theme';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { refresh } from './refresh';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PaymentResult = ({ route, navigation }) => {
-  const userInfo = useSelector((state) => state.userInfo);
   const paymentData = useSelector((state) => state.paymentData);
   const dateNow = useSelector((state) => state.dateNow);
   const dateNext = useSelector((state) => state.dateNext);
@@ -16,7 +15,6 @@ export const PaymentResult = ({ route, navigation }) => {
 
   const paymentSave = async () => {
     if (imp_success === "true") {
-      // const refreshToken = await AsyncStorage.getItem("refresh");
       const refreshToken = await AsyncStorage.getItem("refresh");
       const accessToken = await refresh(refreshToken);
       const auth = {
@@ -30,16 +28,12 @@ export const PaymentResult = ({ route, navigation }) => {
         subscriptionDate: dateNow,
         expirationDate: dateNext,
         paymentDueDate: dateNext,
-        // consumerId: userInfo.id,
         sellerId: 1,
       };
-      console.log(body)
-      console.log(accessToken)
       try {
         const res = await axios.post(`${backendServer.payment}`, body, auth)
-        // consoloe.log("res", res.data);
       } catch (e) {
-        // console.log("error", e.response);
+        console.log("error", e.response);
       }
     }
   };
@@ -99,15 +93,7 @@ export const PaymentResult = ({ route, navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Payments", {
-                id: 1,
-                name: "테스트",
-                group_name: "테스트",
-                price: 1000,
-                image: "https://picsum.photos/200",
-                description: "테스트",
-                views: 100,
-              });
+              navigation.navigate("Payments");
             }}
             style={styles.paymentResultButton}>
             <Text style={styles.paymentResultButtonText}>

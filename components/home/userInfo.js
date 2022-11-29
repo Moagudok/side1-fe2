@@ -9,7 +9,7 @@ export const UserInfo = async () => {
     const auth = {headers: {Authorization: `Bearer ${accessToken}`,}}
     try {
         const res = await axios.get(backendServer.user, auth)
-        return res.data
+        return await res.data
     } catch (e) {
         console.log(e)
     }
