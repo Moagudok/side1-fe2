@@ -28,16 +28,10 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber" : "1.0.0",
-      "bundleIdentifier": "com.submarket.submarkettest",
-      "config": {
-        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~1458002511"
-      }
+      "bundleIdentifier": "com.moagudok.moagudok"
     },
     "android": {
       "versionCode": 1,
-      "config": {
-        "googleMobileAdsAppId": "ca-app-pub-2052781801234117~5766333626"
-      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon10.png",
         "backgroundColor": "#FFFFFF"
@@ -47,7 +41,7 @@
         "resizeMode" : "contain",
         "backgroundColor" : "#FFFFFF"
       },
-      "package": "com.leeminki.submarkettest"
+      "package": "com.moagudok.moagudok"
     },
     "web": {
       "favicon": "./assets/favicon.png"
