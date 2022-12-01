@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { theme, backendServer } from "./theme";
 import { useEffect, useState } from "react";
+import { UserInfo } from "./home/userInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -35,10 +36,13 @@ export default function LoginPage({ navigation }) {
       );
       await AsyncStorage.setItem("refresh", res.data.refresh);
       await AsyncStorage.setItem("access", res.data.access);
+      const userInfo = await UserInfo();
+      dispatch({ type: "SET_USER_INFO", userInfo: userInfo });
       dispatch({
         type: "SET_LOGIN",
         login: true,
       });
+      
     } catch (err) {
       setIncorrect(true);
       Vibration.vibrate(Platform.OS === "ios" ? 0 : 1000);
