@@ -50,6 +50,8 @@ export const backendServer = {
   chatList: `${backSrv6}/chatList/?room=`,
 };
 
+// http://54.180.145.47:8008/chatList/?room=1
+
 // http://54.180.145.47:8001/consumer/product/cursor/list?category=1&search&cursor
 
 // http://54.180.145.47:8001/consumer/product/list?category=1&search&page=1
