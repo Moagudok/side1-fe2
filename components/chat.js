@@ -11,6 +11,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import axios from "axios";
+import { backendServer } from "./theme";
 
 export default function Chat({ navigation, route }) {
   const { name, image, room, user, userName, seller } = route.params;
@@ -18,8 +19,8 @@ export default function Chat({ navigation, route }) {
   const socket = useSelector((state) => state.socket);
   const chatMessages = useSelector((state) => state.chatMessages);
   const inputRef = useRef();
-  const chatDataIp = `http://52.79.183.13:8008/chatList/?room=${room}`;
-  const chatSocketIp = `http://52.79.183.13:8008/chat`
+  const chatDataIp = `${backendServer.chatList}${room}`;
+  const chatSocketIp = backendServer.chatsrv;
   const scrollViewRef = useRef();
   const dispatch = useDispatch();
 

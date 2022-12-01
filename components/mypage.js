@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { theme, themeIcon, backendServer } from "./theme";
+import { theme, backendServer } from "./theme";
 import { useSelector } from "react-redux";
 import { refresh } from "./refresh";
 import { NowLoading } from "./nowLoading";
@@ -46,17 +46,13 @@ export default function Mypage({ navigation }) {
   const NotProduct = () => {
     return (
       <View style={styles.notProduct}>
-        <Text style={styles.notProductText}>구독중인 상품이 없습니다.</Text>
-        <Text style={styles.notProductText}>상품을 구독해보세요!</Text>
+        <Text style={styles.notProductText}>상품이 없습니다.</Text>
       </View>
     );
   };
 
-
-
   return (
-    loading ? <NowLoading /> : 
-    PaymentData.length === 0 ? <NotProduct /> :
+    loading ? <NowLoading /> :
       <View style={styles.container}>
         <View style={styles.fillterButton}>
           <TouchableOpacity onPress={() => { setSubUrl("sub") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#00BFA6" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독중</Text></TouchableOpacity>
@@ -64,32 +60,34 @@ export default function Mypage({ navigation }) {
           <TouchableOpacity onPress={() => { setSubUrl("now") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#FF8DC7" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#당일 만료</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { setSubUrl("exp") }} style={{ ...styles.fillterButtonBox, backgroundColor: "#DC3535" }}><Text style={{ ...styles.fillterButtonText, color: "#fff" }}>#구독 만료</Text></TouchableOpacity>
         </View>
-        <ScrollView>
-          {PaymentData.map((order, index) => (
-            <TouchableOpacity key={index} style={styles.orderView}>
-              <View style={styles.orderBox}>
-                <Image source={{ uri: order.image }} style={styles.orderImage} />
-                <View style={styles.orderInfo}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.orderTitle}
-                  >
-                    {order.product_group_name}
-                  </Text>
-                  <Text style={styles.orderDate}>{order.product_name}</Text>
-                  <Text style={styles.orderPrice}>{order.price.toLocaleString()}원</Text>
-                  <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
+        {PaymentData.length === 0 ? <NotProduct /> :
+          <ScrollView>
+            {PaymentData.map((order, index) => (
+              <TouchableOpacity key={index} style={styles.orderView}>
+                <View style={styles.orderBox}>
+                  <Image source={{ uri: order.image }} style={styles.orderImage} />
+                  <View style={styles.orderInfo}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={styles.orderTitle}
+                    >
+                      {order.product_group_name}
+                    </Text>
+                    <Text style={styles.orderDate}>{order.product_name}</Text>
+                    <Text style={styles.orderPrice}>{order.price.toLocaleString()}원</Text>
+                    <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name, seller: order.seller })}
+                    style={styles.chatButton}>
+                    <Text style={styles.chatButtonText}>문의</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name, seller: order.seller })}
-                  style={styles.chatButton}>
-                  <Text style={styles.chatButtonText}>문의</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        }
       </View>
   );
 }

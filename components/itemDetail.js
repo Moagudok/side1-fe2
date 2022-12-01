@@ -308,7 +308,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sellerItemBox: {
-    borderRadius: 10,
     overflow: "hidden",
     marginRight: 10,
   },

@@ -1,6 +1,10 @@
 import { bottomLoginFalse, bottomLoginTrue } from "./bottomMenuList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const UserGet = async () => {
+    const username = "username"
+}
+
 export function reducer(state, action) {
   switch (action.type) {
     case "SET_CATEGORY_LIST":

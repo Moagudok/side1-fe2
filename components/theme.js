@@ -6,6 +6,7 @@ const backSrv2 = "http://54.180.145.47:8000";
 const backSrv3 = "http://54.180.145.47:8003";
 const backSrv4 = "http://54.180.145.47:8004";
 const backSrv5 = "http://54.180.145.47:8080";
+const backSrv6 = "http://54.180.145.47:8008";
 
 export const theme = {
   bgColor: '#F7F7F7',
@@ -45,6 +46,8 @@ export const backendServer = {
   user: `${backSrv2}/user`,
   paymentData: `${backSrv}/consumer/mypage?type=`,
   payment: `${backSrv5}/payment`,
+  chatsrv: `${backSrv6}/chat`,
+  chatList: `${backSrv6}/chatList/?room=`,
 };
 
 // http://54.180.145.47:8001/consumer/product/cursor/list?category=1&search&cursor

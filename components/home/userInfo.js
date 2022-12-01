@@ -11,7 +11,7 @@ export const UserInfo = async () => {
         const res = await axios.get(backendServer.user, auth)
         return await res.data
     } catch (e) {
-        console.log(e)
+        console.log(e.response)
     }
 
 }
