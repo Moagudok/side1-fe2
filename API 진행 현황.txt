@@ -13,10 +13,3 @@ API 진행 현황
 
 미완성 된 부분은 추가 업데이트후 완성 예정입니다.
 화요일 10시전까지 빌드 해서 올리도록 하겠습니다.
-
-http://52.79.143.145:8001/consumer/mypage?type=exp
-
-http://52.79.143.145:8001/search/latest
-http://52.79.143.145:8001/search/tophits
-
-http://52.79.143.145:8001/search/latest
