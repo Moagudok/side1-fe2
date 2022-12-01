@@ -48,7 +48,7 @@ export default function Category({ navigation }) {
   return (
     <ImageBackground source={{ uri: "https://t1.daumcdn.net/cfile/tistory/99B0703359F035FB15" }} style={styles.image}>
 
-    <View style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.categoryList}>
           {categoryList.map((item, index) => {
             return (
@@ -72,7 +72,7 @@ export default function Category({ navigation }) {
             );
           })}
         </View>
-    </View>
+      </View>
     </ImageBackground>
 
   );

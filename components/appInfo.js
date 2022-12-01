@@ -1,4 +1,4 @@
-import { Text, StyleSheet, ScrollView,Image } from 'react-native';
+import { Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { theme } from './theme';
 
 export const AppInfo = () => {
@@ -28,15 +28,15 @@ export const AppInfo = () => {
             marginBottom: 10,
         },
         image: {
-            marginTop:30,
+            marginTop: 30,
             width: theme.deviceWidth - 40,
             height: theme.deviceWidth - 50,
             resizeMode: 'cover',
             borderRadius: 10,
         },
-        
+
     });
-    
+
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.projectTitle}>
@@ -49,7 +49,7 @@ export const AppInfo = () => {
                 - 프론트 엔드: 이민기, 백선진
             </Text>
             <Text style={styles.frontPeople}>
-                - 백 엔드: 백선민, 박재현, 고현우, 황영상, 김태인
+                - 백 엔드: 김선민, 박재현, 고현우, 황영상, 김태인
             </Text>
             <Text style={styles.stack}>
                 - 프론트 스택: React Native Expo, Remix
@@ -58,8 +58,8 @@ export const AppInfo = () => {
                 - 백엔드 스택: Node.js, Express, Django, Spring, PostgreSQL, MongoDB, Redis...
             </Text>
             <Image
-            style={styles.image}
-            source={require('../assets/png.jpg')}
+                style={styles.image}
+                source={require('../assets/png.jpg')}
             />
         </ScrollView>
     );

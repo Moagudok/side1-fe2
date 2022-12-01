@@ -118,7 +118,7 @@ export default function Chat({ navigation, route }) {
           marginBottom: 10,
         }}
       >
-        <Image style={{ width: 70, height: 70 }} source={{ uri : image }} />
+        <Image style={{ width: 70, height: 70 }} source={{ uri: image }} />
         <Text
           style={{
             fontSize: 20,

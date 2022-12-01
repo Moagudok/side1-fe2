@@ -45,7 +45,7 @@ export default function Mypage({ navigation }) {
   const NotProduct = () => {
     return (
       <View style={styles.notProduct}>
-        <Text style={styles.notProductText}>상품이 없습니다.</Text>
+        <Text style={styles.notProductText}>상품이 존재하지 않습니다.</Text>
       </View>
     );
   };
