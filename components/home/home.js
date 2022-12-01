@@ -24,6 +24,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
 
   const setDispatch = async () => {
+    await getRefreshToken() ? dispatch({ type: "SET_LOGIN", login: true }) : dispatch({ type: "SET_LOGIN", login: false });
     dispatch({ type: "SET_CATEGORY_LIST", list: await (await sethomeData()).categories });
     dispatch({ type: "SET_BEST_ITEM_LIST", list: await (await sethomeData()).popular_products });
     dispatch({ type: "SET_NEW_ITEM_LIST", list: await (await sethomeData()).new_products });
@@ -35,7 +36,6 @@ export default function Home({ navigation }) {
   useEffect(() => {
     dismissSplashScreen();
     sethomeData();
-    getRefreshToken() ? dispatch({ type: "SET_LOGIN", login: true }) : null;
     setDispatch();
     setIsLoading(false);
   }, []);

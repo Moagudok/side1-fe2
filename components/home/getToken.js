@@ -11,5 +11,6 @@ export const getRefreshToken = async () => {
             return false;
         }
     } catch (e) {
+        return false;
     }
 };

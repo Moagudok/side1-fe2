@@ -29,7 +29,6 @@ export default function Mypage({ navigation }) {
         setPaymentData(res.data)
         setLoading(false);
       } catch (e) {
-        console.log(e);
         setLoading(false);
       }
     }

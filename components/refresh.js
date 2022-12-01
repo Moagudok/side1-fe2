@@ -10,7 +10,6 @@ export const refresh = async (refresh) => {
         return res.data.access;
     } catch (e) {
         //retry
-        console.log(e.response);
-        console.log("리프레시 토큰 에러");
+        console.log("refresh error", e.config.status);
     }
 }
