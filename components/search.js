@@ -81,6 +81,8 @@ export default function Search({ navigation }) {
       searchText: text,
       url: `category&search=${text}&cursor`,
     });
+    setRecentlySearchList([{ searchText: text }, ...recentlySearchList]);
+    recentSearchSave(text);
   };
 
   const styles = StyleSheet.create({
