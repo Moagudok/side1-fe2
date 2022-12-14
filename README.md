@@ -27,3 +27,7 @@
 - AsyncStorage (로그인 정보 저장)
 - ReactNative Navigation (화면 이동)
 - ReactNative Vector Icons (아이콘)
+
+## React Native
+
+React Native 란 웹 개발 도구인 React와 같은 컴포넌트 기반의 접근법을 사용하여 모바일 앱을 만들 수 있는 프레임워크입니다. 이 프레임워크를 사용하면 모바일 앱을 만들 때 코드를 재사용할 수 있어 개발 속도를 빠르게 할 수 있습니다. 또한 React Native는 안드로이드와 iOS 모두에서 작동하므로 한 번 작성한 코드를 두 개의 모바일 플랫폼에서 사용할 수 있습니다.
