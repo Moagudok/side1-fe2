@@ -49,3 +49,43 @@ const storeToken = async (token) => {
 };
 ```
 위 코드는 JWT 토큰을 AsyncStorage에 저장하는 기본적인 예시입니다. 실제로 사용할 때는 적절한 예외 처리와 다른 세부 사항을 고려해서 코드를 작성해야 합니다.
+
+
+## Socket.io
+
+Socket.io은 웹 클라이언트와 서버 간의 양방향 실시간 통신을 가능하게 하는 자바스크립트 라이브러리이다. 리액트 네이티브를 포함한 다양한 프론트엔드 프레임워크와 함께 사용할 수 있다.
+
+Socket.io을 React Native와 함께 사용하려면 Socket.io 프로토콜의 클라이언트 측 구현을 제공하는 socket.io-client 패키지를 설치해야 합니다. 다음과 같이 npm 또는 yarn 패키지 관리자를 사용하여 이 패키지를 설치할 수 있습니다.
+
+```bash
+# Using npm
+npm install socket.io-client
+
+# Using yarn
+yarn add socket.io-client
+```
+
+socket.io-client 패키지가 설치되면 패키지에서 Socket 클래스를 가져와서 이 클래스를 사용하여 다음과 같은 새 Socket 인스턴스를 생성하여 React Native 앱에서 사용할 수 있습니다.
+
+```javascript
+import io from 'socket.io-client';
+
+const socket = io('http://your-socket-io-server.com');
+```
+
+그런 다음 이 socket 인스턴스를 사용하여 Socket.io 클라이언트에서 제공하는 다양한 방법(예: emit() 및 on()을 사용하여 서버에서 메시지를 보내고 받을 수 있습니다. 예를 들어 emit() 메소드를 사용하여 다음과 같은 메시지를 서버에 보낼 수 있습니다.
+
+```javascript
+socket.emit('message', { data: 'Hello from React Native!' });
+```
+
+또한 on() 메서드를 사용하여 다음과 같은 서버의 메시지를 수신할 수 있습니다.
+
+```javascript
+socket.on('message', (message) => {
+  console.log(message);
+});
+```
+
+
+
