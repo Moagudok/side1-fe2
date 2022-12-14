@@ -129,3 +129,30 @@ export default App;
 ```
 
 이 예에서 App 구성 요소는 RootStack 탐색기를 렌더링합니다. 이 탐색기는 현재 탐색 상태에 따라 적절한 화면을 렌더링합니다.
+
+## Redux
+
+Redux는 JavaScript 애플리케이션에서 상태를 관리하기 위해 사용하는 라이브러리입니다. Redux는 애플리케이션의 상태를 예측 가능한 방식으로 관리할 수 있도록 도와줍니다. Redux는 일반적으로 리액트 애플리케이션과 함께 사용되지만, 다른 프레임워크와도 같이 사용할 수 있습니다.
+
+```javascript
+import { createStore } from 'redux';
+
+function reducer(state, action) {
+  if (action.type === 'ADD_TODO') {
+    return {
+      todos: [...state.todos, action.todo],
+    };
+  }
+  // For any unknown action, return the current state
+  return state;
+}
+
+const store = createStore(reducer);
+
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: { text: 'Learn Redux', completed: false },
+});
+
+console.log(store.getState());
+```
