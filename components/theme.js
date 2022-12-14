@@ -7,6 +7,7 @@ const backSrv3 = "http://54.180.145.47:8003";
 const backSrv4 = "http://54.180.145.47:8004";
 const backSrv5 = "http://54.180.145.47:8080";
 const backSrv6 = "http://54.180.145.47:8008";
+// const backSrv6 = "http://localhost:8008";
 
 export const theme = {
   bgColor: '#F7F7F7',
