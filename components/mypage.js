@@ -84,7 +84,7 @@ export default function Mypage({ navigation }) {
                   <Text style={styles.orderperiod}>{order.period[0]} ~{order.period[1]}</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Chat", { room: `room${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name, seller: order.seller })}
+                  onPress={() => navigation.navigate("Chat", { room: `${order.id}`, name: order.product_name, image: order.image, user: userInfo.id, userName: userInfo.name, seller: order.seller })}
                   style={styles.chatButton}>
                   <Text style={styles.chatButtonText}>문의</Text>
                 </TouchableOpacity>
