@@ -31,3 +31,21 @@
 ## React Native
 
 React Native 란 웹 개발 도구인 React와 같은 컴포넌트 기반의 접근법을 사용하여 모바일 앱을 만들 수 있는 프레임워크입니다. 이 프레임워크를 사용하면 모바일 앱을 만들 때 코드를 재사용할 수 있어 개발 속도를 빠르게 할 수 있습니다. 또한 React Native는 안드로이드와 iOS 모두에서 작동하므로 한 번 작성한 코드를 두 개의 모바일 플랫폼에서 사용할 수 있습니다.
+
+### JWT & Asnc Storege
+
+JWT(JSON Web Token)은 비밀번호나 다른 종류의 인증 정보를 전달할 때 사용하는 토큰입니다. AsyncStorage는 React Native에서 사용하는 비동기 데이터 저장소입니다. JWT 토큰을 AsyncStorage에 저장하는 방법은 다음과 같습니다.
+
+```Javascript
+import AsyncStorage from '@react-native-community/async-storage';
+
+// JWT 토큰을 AsyncStorage에 저장하는 함수
+const storeToken = async (token) => {
+  try {
+    await AsyncStorage.setItem('token', token);
+  } catch (e) {
+    // 오류가 발생했을 때 처리
+  }
+};
+```
+위 코드는 JWT 토큰을 AsyncStorage에 저장하는 기본적인 예시입니다. 실제로 사용할 때는 적절한 예외 처리와 다른 세부 사항을 고려해서 코드를 작성해야 합니다.
