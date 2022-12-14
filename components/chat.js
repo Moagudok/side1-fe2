@@ -36,13 +36,13 @@ export default function Chat({ navigation, route }) {
 
   const chatJoin = () => {
     if (socket) {
-      socket.emit("join", room, user);
+      socket.emit("join", `room${room}`, user);
     }
   };
 
   const chatLeave = () => {
     if (socket) {
-      socket.emit("leave", room, user);
+      socket.emit("leave", `room${room}`, user);
       socket.disconnect();
     }
   };
@@ -53,40 +53,23 @@ export default function Chat({ navigation, route }) {
 
   useEffect(() => {
     const socket = io(chatSocketIp);
-    socket.emit("join", room, user);
-    socket.on("join users", (users) => {
-      setUserList(users);
-    });
+    socket.emit("join", `room${room}`, user);
     dispatch({ type: "SOCKET", socket });
     return () => {
-      socket.emit("leave", room, user);
-      socket.on("join users", (users) => {
-        setUserList(users);
-      });
+      socket.emit("leave", `room${room}`, user);
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
     if (socket) {
-      socket.on("join users", (users) => {
-        console.log(users);
-        setUserList(users);
-      });
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    if (socket) {
       socket.on("chat message", (room, user, userName, message) => {
-        socket.on("join users", (users) => {
-          setUserList(users);
-        });
         dispatch({
-          type: "ADD_CHAT_MESSAGE",
-          message: { room, user, message, userName, time: new Date() },
+          type: 'ADD_CHAT_MESSAGE',
+          message: { room, user, userName, message, time: new Date() },
         });
-      });
+      }
+      );
     }
   }, [socket]);
 
@@ -98,11 +81,11 @@ export default function Chat({ navigation, route }) {
 
   const sendMessage = () => {
     if (message) {
-      socket.emit("chat message", room, user, userName, message, seller);
+      socket.emit("chat message", `room${room}`, user, userName, message, seller);
       setMessage("");
       dispatch({
         type: "ADD_CHAT_MESSAGE",
-        message: { userName, user, message, room, time: new Date() },
+        message: { userName, user, message, room: `room${room}`, time: new Date() },
       });
     }
   };
@@ -118,7 +101,7 @@ export default function Chat({ navigation, route }) {
           marginBottom: 10,
         }}
       >
-        <Image style={{ width: 70, height: 70 }} source={{ uri: image }} />
+        <Image style={{ width: 30, height: 30, borderRadius: 15 }} source={{ uri: image }} />
         <Text
           style={{
             fontSize: 20,
@@ -135,6 +118,7 @@ export default function Chat({ navigation, route }) {
         onContentSizeChange={() =>
           scrollViewRef.current.scrollToEnd({ animated: false })
         }
+        paddingHorizontal={10}
         // top scroll page nation
         // onScroll={(e) => {
         //   if (e.nativeEvent.contentOffset.y === 0) {
@@ -145,7 +129,7 @@ export default function Chat({ navigation, route }) {
         scrollToOverflowEnabled={true}
         data={chatMessages}
         renderItem={({ item }) =>
-          room === item.room ? (
+          `room${room}` === item.room ? (
             <View
               style={{
                 alignItems: item.userName === userName ? "flex-end" : "flex-start",
