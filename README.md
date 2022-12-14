@@ -156,3 +156,6 @@ store.dispatch({
 
 console.log(store.getState());
 ```
+
+Provider로 지정된 컴포넌트에서 스테이트를 상태 관리 하였습니다.
+그렇게 하면 불필요한 렌더를 막을수 있습니다.
