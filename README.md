@@ -87,5 +87,45 @@ socket.on('message', (message) => {
 });
 ```
 
+### React Native Navigation
 
+React Native Navigation은 리액트 네이티브 앱에서 스크린을 전환하고 앱의 구조를 관리하는 라이브러리입니다. 네이티브 네비게이션을 사용하면 앱의 사용자 인터페이스를 쉽게 작성할 수 있으며, 앱의 기능을 강력하고 사용자 친화적으로 구현할 수 있습니다.
 
+```javascript
+import { createStackNavigator } from 'react-navigation-stack';
+import HomeScreen from './screens/HomeScreen';
+import DetailsScreen from './screens/DetailsScreen';
+
+const RootStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Details: DetailsScreen,
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
+```
+
+이 예에서 루트 스택 탐색기는 두 개의 경로를 포함하는 스택 탐색기입니다. 홈 및 세부 정보. 홈 경로는 초기 경로이며 홈 스크린 구성 요소에 해당합니다. Details 경로는 DetailsScreen 구성 요소에 해당합니다.
+
+이 네비게이터를 사용하려면 다음과 같이 앱에서 렌더링하기만 하면 됩니다.
+
+```javascript
+import React from 'react';
+import { View } from 'react-native';
+import RootStack from './navigators/RootStack';
+
+const App = () => {
+  return (
+    <View style={{ flex: 1 }}>
+      <RootStack />
+    </View>
+  );
+};
+
+export default App;
+
+```
+
+이 예에서 App 구성 요소는 RootStack 탐색기를 렌더링합니다. 이 탐색기는 현재 탐색 상태에 따라 적절한 화면을 렌더링합니다.
